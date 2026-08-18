@@ -1,0 +1,3 @@
+import { ProductCard } from "@/components/ProductCard";
+import { products } from "@/data/catalog";
+export default function ProductsPage(){return <div className="pageWrap"><section className="pageHero shell"><span className="eyebrow">PRODUCTS</span><h1>Useful software, built as real products.</h1><p>Every SysOne product is planned around versions, documentation, support, licensing, secure distribution and a long-term product roadmap.</p></section><section className="section compactTop"><div className="shell cardGrid3">{products.map(p=><ProductCard key={p.slug} product={p}/>)}</div></section></div>}

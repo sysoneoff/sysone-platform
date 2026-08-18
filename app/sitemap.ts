@@ -1,0 +1,3 @@
+import type { MetadataRoute } from "next";
+import { products,games } from "@/data/catalog";
+export default function sitemap():MetadataRoute.Sitemap{const base=process.env.NEXT_PUBLIC_SITE_URL||"https://sysone.uz";const paths=["","/solutions","/products","/games","/marketplace","/ai","/resources","/labs","/docs","/support","/pricing","/about","/contact","/status","/case-studies"];return [...paths.map(path=>({url:`${base}${path}`,lastModified:new Date(),changeFrequency:"weekly" as const,priority:path===""?1:.7})),...products.map(p=>({url:`${base}/products/${p.slug}`,lastModified:new Date(),changeFrequency:"monthly" as const,priority:.7})),...games.map(g=>({url:`${base}/games/${g.slug}`,lastModified:new Date(),changeFrequency:"monthly" as const,priority:.7}))];}
