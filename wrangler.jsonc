@@ -4,17 +4,23 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-08-18",
   "compatibility_flags": ["nodejs_compat"],
+
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  "observability": { "enabled": true }
 
-  // Add bindings only after the corresponding Cloudflare resources exist.
-  // "d1_databases": [{ "binding": "SYSONE_DB", "database_name": "sysone-production", "database_id": "..." }],
-  // "r2_buckets": [
-  //   { "binding": "SYSONE_ASSETS", "bucket_name": "sysone-assets" },
-  //   { "binding": "SYSONE_DOWNLOADS", "bucket_name": "sysone-downloads" }
-  // ],
-  // "kv_namespaces": [{ "binding": "SYSONE_CONFIG", "id": "..." }]
+  "observability": {
+    "enabled": true
+  },
+
+  "d1_databases": [
+    {
+      "binding": "SYSONE_DB",
+      "database_name": "sysone-production",
+      "database_id": "0b6ef9ed-dc38-4c44-94b3-e947147ce8bf"
+    }
+  ]
+
+  // R2 va KV keyingi bosqichda qo'shiladi.
 }
