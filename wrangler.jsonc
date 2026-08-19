@@ -20,7 +20,16 @@
       "database_name": "sysone-production",
       "database_id": "0b6ef9ed-dc38-4c44-94b3-e947147ce8bf"
     }
-  ]
+  ],
 
-  // R2 va KV keyingi bosqichda qo'shiladi.
+  "r2_buckets": [
+    {
+      "binding": "SYSONE_ASSETS",
+      "bucket_name": "sysone-assets"
+    },
+    {
+      "binding": "SYSONE_DOWNLOADS",
+      "bucket_name": "sysone-downloads"
+    }
+  ]
 }
