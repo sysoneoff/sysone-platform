@@ -31,5 +31,12 @@
       "binding": "SYSONE_DOWNLOADS",
       "bucket_name": "sysone-downloads"
     }
+  ],
+
+  "kv_namespaces": [
+    {
+      "binding": "SYSONE_CONFIG",
+      "id": "91bd218190654724b4b3f61d032e7246"
+    }
   ]
 }
