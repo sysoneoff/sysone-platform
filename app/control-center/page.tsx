@@ -1,8 +1,11 @@
-import { notFound } from "next/navigation";
+import { isAdminAuthenticated } from "@/lib/server/admin-auth";
 import { ControlCenterClient } from "./ControlCenterClient";
+import { ControlCenterLogin } from "./ControlCenterLogin";
+import "./control-center.css";
 
-export default function ControlCenterPage() {
-  const enabled = process.env.NODE_ENV !== "production" || process.env.ENABLE_CONTROL_CENTER_PREVIEW === "true";
-  if (!enabled) notFound();
-  return <ControlCenterClient />;
+export const dynamic = "force-dynamic";
+
+export default async function ControlCenterPage() {
+  const authenticated = await isAdminAuthenticated();
+  return authenticated ? <ControlCenterClient /> : <ControlCenterLogin />;
 }

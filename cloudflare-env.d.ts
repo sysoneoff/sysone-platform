@@ -4,4 +4,5 @@ interface CloudflareEnv {
   SYSONE_ASSETS?: R2Bucket;
   SYSONE_DOWNLOADS?: R2Bucket;
   SYSONE_CONFIG?: KVNamespace;
+  SYSONE_ADMIN_SECRET?: string;
 }
