@@ -116,12 +116,12 @@ export function isSafeAdminMutation(request: Request) {
   }
 }
 
-export function adminCookieOptions() {
+export function adminCookieOptions(maxAge = SESSION_TTL_SECONDS) {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict" as const,
     path: "/",
-    maxAge: SESSION_TTL_SECONDS,
+    maxAge,
   };
 }

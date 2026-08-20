@@ -38,6 +38,6 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   if (!isSafeAdminMutation(request)) return NextResponse.json({ ok: false, error: "forbidden" }, { status: 403 });
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(ADMIN_COOKIE_NAME, "", { ...adminCookieOptions(), maxAge: 0 });
+  response.cookies.set(ADMIN_COOKIE_NAME, "", adminCookieOptions(0));
   return response;
 }
