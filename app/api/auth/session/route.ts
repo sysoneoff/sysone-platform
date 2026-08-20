@@ -55,10 +55,7 @@ export async function DELETE(request: Request) {
   response.cookies.set(
     USER_SESSION_COOKIE,
     "",
-    {
-      ...userSessionCookieOptions(),
-      maxAge: 0,
-    },
+    userSessionCookieOptions(0),
   );
 
   return response;

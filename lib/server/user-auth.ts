@@ -182,13 +182,13 @@ export async function deleteExpiredUserSessions() {
     .run();
 }
 
-export function userSessionCookieOptions() {
+export function userSessionCookieOptions(maxAge = SESSION_TTL_SECONDS) {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
     path: "/",
-    maxAge: SESSION_TTL_SECONDS,
+    maxAge,
   };
 }
 
