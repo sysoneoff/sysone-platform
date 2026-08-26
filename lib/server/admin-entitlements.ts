@@ -98,11 +98,15 @@ function cleanEntitlementId(value: unknown) {
 }
 
 function normalizeEntitlementStatus(value: unknown) {
-  const status =
-    typeof value === "string" ? value.trim().toUpperCase().slice(0, 32) : "";
-  const normalized = status || "ACTIVE";
+  if (value === undefined) return "ACTIVE";
+  if (typeof value !== "string") throw new Error("invalid_status");
 
-  if (!["ACTIVE", "SUSPENDED", "EXPIRED", "REVOKED"].includes(normalized)) {
+  const normalized = value.trim().toUpperCase().slice(0, 32);
+
+  if (
+    !normalized ||
+    !["ACTIVE", "SUSPENDED", "EXPIRED", "REVOKED"].includes(normalized)
+  ) {
     throw new Error("invalid_status");
   }
 
@@ -170,16 +174,97 @@ export async function createAdminEntitlement(input: EntitlementMutationInput) {
 
   await validateEntitlementReferences(userId, productId, orderId);
 
+  const nowRow = await getDb()
+    .prepare("SELECT CURRENT_TIMESTAMP AS now")
+    .first<{ now: string }>();
+
+  if (!nowRow?.now) throw new Error("database_time_unavailable");
+
+  const startsAt = nowRow.now;
+
+  if (endsAt) {
+    const startsAtMs = Date.parse(startsAt.replace(" ", "T") + "Z");
+    const endsAtMs = Date.parse(endsAt.replace(" ", "T") + "Z");
+
+    if (
+      Number.isNaN(startsAtMs) ||
+      Number.isNaN(endsAtMs) ||
+      endsAtMs <= startsAtMs
+    ) {
+      throw new Error("invalid_ends_at");
+    }
+  }
+
   const id = crypto.randomUUID();
 
   await getDb()
     .prepare(
       `INSERT INTO entitlements
        (id, user_id, product_id, order_id, status, starts_at, ends_at)
-       VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
-    .bind(id, userId, productId, orderId, status, endsAt)
+    .bind(id, userId, productId, orderId, status, startsAt, endsAt)
     .run();
 
   return getAdminEntitlementById(id);
+}
+
+export type EntitlementUpdateInput = {
+  status?: string;
+  endsAt?: string | null;
+};
+
+export async function updateAdminEntitlement(
+  id: string,
+  input: EntitlementUpdateInput,
+): Promise<AdminEntitlement | null> {
+  const entitlementId = cleanEntitlementId(id);
+
+  if (!entitlementId) throw new Error("entitlement_id_required");
+
+  const existing = await getAdminEntitlementById(entitlementId);
+  if (!existing) return null;
+
+  const hasStatus = Object.prototype.hasOwnProperty.call(input, "status");
+  const hasEndsAt = Object.prototype.hasOwnProperty.call(input, "endsAt");
+
+  if (!hasStatus && !hasEndsAt) {
+    throw new Error("no_updates");
+  }
+
+  const status = hasStatus
+    ? normalizeEntitlementStatus(input.status)
+    : existing.status;
+
+  const endsAt = hasEndsAt
+    ? normalizeEntitlementEndsAt(input.endsAt)
+    : existing.endsAt;
+
+  if (endsAt) {
+    const startsAtMs = Date.parse(
+      existing.startsAt.replace(" ", "T") + "Z",
+    );
+    const endsAtMs = Date.parse(
+      endsAt.replace(" ", "T") + "Z",
+    );
+
+    if (
+      Number.isNaN(startsAtMs) ||
+      Number.isNaN(endsAtMs) ||
+      endsAtMs <= startsAtMs
+    ) {
+      throw new Error("invalid_ends_at");
+    }
+  }
+
+  await getDb()
+    .prepare(
+      `UPDATE entitlements
+       SET status = ?, ends_at = ?
+       WHERE id = ?`,
+    )
+    .bind(status, endsAt, entitlementId)
+    .run();
+
+  return getAdminEntitlementById(entitlementId);
 }
