@@ -3,17 +3,16 @@
   "name": "sysone-platform",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-08-18",
-  "compatibility_flags": ["nodejs_compat"],
-
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-
   "observability": {
     "enabled": true
   },
-
   "d1_databases": [
     {
       "binding": "SYSONE_DB",
@@ -21,7 +20,6 @@
       "database_id": "0b6ef9ed-dc38-4c44-94b3-e947147ce8bf"
     }
   ],
-
   "r2_buckets": [
     {
       "binding": "SYSONE_ASSETS",
@@ -32,11 +30,28 @@
       "bucket_name": "sysone-downloads"
     }
   ],
-
   "kv_namespaces": [
     {
       "binding": "SYSONE_CONFIG",
       "id": "91bd218190654724b4b3f61d032e7246"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "SYSONE_ACTIVATION_IP_RATE_LIMIT",
+      "namespace_id": "26082601",
+      "simple": {
+        "limit": 30,
+        "period": 60
+      }
+    },
+    {
+      "name": "SYSONE_ACTIVATION_LICENSE_RATE_LIMIT",
+      "namespace_id": "26082602",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
     }
   ]
 }
