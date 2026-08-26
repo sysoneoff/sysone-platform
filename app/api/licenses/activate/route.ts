@@ -1,7 +1,9 @@
-import {
+﻿import {
   activateDevice,
   type DeviceActivationInput,
 } from "@/lib/server/device-activation";
+import { hashLicenseKey } from "@/lib/server/admin-licenses";
+import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,7 @@ const noStore = {
 function errorResponse(
   error: string,
   status: number,
+  extraHeaders?: Record<string, string>,
 ) {
   return Response.json(
     {
@@ -20,12 +23,67 @@ function errorResponse(
     },
     {
       status,
-      headers: noStore,
+      headers: {
+        ...noStore,
+        ...extraHeaders,
+      },
     },
   );
 }
 
+function getClientKey(request: Request) {
+  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
+
+  if (cfIp) {
+    return `activation-ip:${cfIp}`;
+  }
+
+  const forwarded = request.headers
+    .get("x-forwarded-for")
+    ?.split(",")[0]
+    ?.trim();
+
+  return `activation-ip:${forwarded || "unknown"}`;
+}
+
+async function enforceIpRateLimit(request: Request) {
+  const limiter = requireBinding(
+    getSysOneEnv().SYSONE_ACTIVATION_IP_RATE_LIMIT,
+    "SYSONE_ACTIVATION_IP_RATE_LIMIT",
+  );
+
+  return limiter.limit({
+    key: getClientKey(request),
+  });
+}
+
+async function enforceLicenseRateLimit(licenseKey: string) {
+  const limiter = requireBinding(
+    getSysOneEnv().SYSONE_ACTIVATION_LICENSE_RATE_LIMIT,
+    "SYSONE_ACTIVATION_LICENSE_RATE_LIMIT",
+  );
+
+  const licenseHash = await hashLicenseKey(licenseKey.trim());
+
+  return limiter.limit({
+    key: `activation-license:${licenseHash}`,
+  });
+}
+
 export async function POST(request: Request) {
+  try {
+    const { success } = await enforceIpRateLimit(request);
+
+    if (!success) {
+      return errorResponse("rate_limit_exceeded", 429, {
+        "Retry-After": "60",
+      });
+    }
+  } catch (error) {
+    console.error("Activation IP rate limit failed", error);
+    return errorResponse("activation_unavailable", 503);
+  }
+
   let input: DeviceActivationInput;
 
   try {
@@ -42,6 +100,26 @@ export async function POST(request: Request) {
     input = parsed as DeviceActivationInput;
   } catch {
     return errorResponse("invalid_request", 400);
+  }
+
+  if (
+    typeof input.licenseKey === "string" &&
+    input.licenseKey.trim()
+  ) {
+    try {
+      const { success } = await enforceLicenseRateLimit(
+        input.licenseKey,
+      );
+
+      if (!success) {
+        return errorResponse("rate_limit_exceeded", 429, {
+          "Retry-After": "60",
+        });
+      }
+    } catch (error) {
+      console.error("Activation license rate limit failed", error);
+      return errorResponse("activation_unavailable", 503);
+    }
   }
 
   try {

@@ -1,3 +1,7 @@
+﻿interface RateLimit {
+  limit(input: { key: string }): Promise<{ success: boolean }>;
+}
+
 interface CloudflareEnv {
   ASSETS: Fetcher;
   SYSONE_DB?: D1Database;
@@ -5,4 +9,6 @@ interface CloudflareEnv {
   SYSONE_DOWNLOADS?: R2Bucket;
   SYSONE_CONFIG?: KVNamespace;
   SYSONE_ADMIN_SECRET?: string;
+  SYSONE_ACTIVATION_IP_RATE_LIMIT?: RateLimit;
+  SYSONE_ACTIVATION_LICENSE_RATE_LIMIT?: RateLimit;
 }
