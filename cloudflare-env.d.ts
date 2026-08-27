@@ -1,4 +1,4 @@
-﻿interface RateLimit {
+interface RateLimit {
   limit(input: { key: string }): Promise<{ success: boolean }>;
 }
 
@@ -9,6 +9,8 @@ interface CloudflareEnv {
   SYSONE_DOWNLOADS?: R2Bucket;
   SYSONE_CONFIG?: KVNamespace;
   SYSONE_ADMIN_SECRET?: string;
+  GOOGLE_CLIENT_ID?: string;
+  GOOGLE_CLIENT_SECRET?: string;
   SYSONE_ACTIVATION_IP_RATE_LIMIT?: RateLimit;
   SYSONE_ACTIVATION_LICENSE_RATE_LIMIT?: RateLimit;
 }
