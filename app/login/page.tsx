@@ -4,6 +4,7 @@ import {
   KeyRound,
   LockKeyhole,
   Mail,
+  Send,
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -26,8 +27,7 @@ export default function LoginPage() {
         </h1>
 
         <p>
-          Sign in securely with your Google account.
-          Telegram authentication will be available next.
+          Sign in securely with Google or Telegram.
         </p>
 
         <div className="authMethods">
@@ -39,14 +39,13 @@ export default function LoginPage() {
             Continue with Google
           </a>
 
-          <button
+          <a
             className="button buttonGhost"
-            disabled
-            title="Telegram sign-in will be enabled in the next authentication stage"
+            href="/api/auth/telegram"
           >
-            <span className="telegramMark">↗</span>
-            Telegram — coming next
-          </button>
+            <Send />
+            Continue with Telegram
+          </a>
 
           <div className="authDivider">
             <span>future options</span>
@@ -71,8 +70,8 @@ export default function LoginPage() {
 
         <div className="secureRow">
           <LockKeyhole />
-          Google authentication uses secure OAuth,
-          PKCE and SysOne sessions.
+          Google and Telegram authentication use
+          secure OAuth/OIDC, PKCE and SysOne sessions.
         </div>
 
         <small>
