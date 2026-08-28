@@ -1,3 +1,0 @@
-import { CheckCircle2 } from "lucide-react";
-const services=["Website","SysOne ID","Marketplace","Downloads","Documentation","SysOne AI","Games services"];
-export default function StatusPage(){return <div className="pageWrap"><section className="pageHero shell statusHero"><span className="statusBig"><CheckCircle2/> All systems operational</span><h1>SysOne Status</h1><p>A dedicated service-status model is included in the platform roadmap for incidents, maintenance and operational history.</p></section><section className="section compactTop"><div className="shell statusList surface">{services.map(s=><div key={s}><span>{s}</span><em><i/>Operational</em></div>)}</div></section></div>}
