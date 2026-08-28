@@ -1,5 +1,69 @@
+import type { Metadata } from "next";
+
 import { GameCard } from "@/components/GameCard";
-import { games } from "@/data/catalog";
-import Link from "next/link";
-import { ArrowRight, Gamepad2 } from "lucide-react";
-export default function GamesPage(){return <div className="pageWrap gamesPage"><section className="pageHero shell"><span className="eyebrow">SYSONE GAMES</span><h1>Playful ideas. Serious product craft.</h1><p>SysOne Games builds mobile, PC and web experiences with premium presentation, responsive controls and architecture ready for profiles, achievements, cloud saves and multiplayer services.</p><div className="heroActions"><Link className="button buttonPrimary" href="/contact">Build a game <ArrowRight size={16}/></Link><Link className="button buttonGhost" href="/labs">Game experiments</Link></div></section><section className="section compactTop"><div className="shell cardGrid3">{games.map(g=><GameCard key={g.slug} game={g}/>)}</div></section><section className="section sectionTint"><div className="shell gamesStudio surface"><Gamepad2 size={34}/><div><span className="eyebrow">GAME PLATFORM ROADMAP</span><h2>One SysOne ID, across games.</h2><p>Future game services are designed around player profiles, cloud saves, achievements, leaderboards, matchmaking, moderation and telemetry — introduced only when a game needs them.</p></div></div></section></div>}
+import { listPublishedProducts } from "@/lib/server/products";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Games",
+  description:
+    "Discover games currently published by SysOne Games.",
+};
+
+export default async function GamesPage() {
+  const games = await listPublishedProducts("GAME");
+
+  return (
+    <div className="pageWrap gamesPage">
+      <section className="pageHero shell">
+        <span className="eyebrow">
+          SYSONE GAMES
+        </span>
+
+        <h1>Games from SysOne.</h1>
+
+        <p>
+          Explore games currently published through the
+          SysOne Store, including real platform,
+          availability and release information.
+        </p>
+      </section>
+
+      <section className="section compactTop">
+        <div className="shell">
+          <div className="sectionMiniHead">
+            <div>
+              <h2>Game catalog</h2>
+            </div>
+
+            <span>
+              {games.length}{" "}
+              {games.length === 1 ? "game" : "games"}
+            </span>
+          </div>
+
+          {games.length > 0 ? (
+            <div className="cardGrid3">
+              {games.map((game) => (
+                <GameCard
+                  key={game.id}
+                  game={game}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="surface emptyState">
+              <h2>No games are currently published.</h2>
+
+              <p>
+                SysOne Games does not currently have
+                a publicly available release in the store.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
