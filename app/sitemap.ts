@@ -28,7 +28,8 @@ function getValidDate(value: string) {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getBaseUrl();
 
-  const products = await listPublishedProducts();
+  const products =
+    await listPublishedProducts();
 
   const staticPaths = [
     {
@@ -54,11 +55,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       path: "/ai",
       priority: 0.7,
-      changeFrequency: "weekly" as const,
-    },
-    {
-      path: "/resources",
-      priority: 0.6,
       changeFrequency: "weekly" as const,
     },
     {
@@ -91,7 +87,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap =
     staticPaths.map((item) => ({
       url: `${base}${item.path}`,
-      changeFrequency: item.changeFrequency,
+      changeFrequency:
+        item.changeFrequency,
       priority: item.priority,
     }));
 
@@ -103,14 +100,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           : `/products/${product.slug}`;
 
       const lastModified =
-        getValidDate(product.updatedAt);
+        getValidDate(
+          product.updatedAt,
+        );
 
       return {
         url: `${base}${path}`,
         ...(lastModified
           ? { lastModified }
           : {}),
-        changeFrequency: "weekly" as const,
+        changeFrequency:
+          "weekly" as const,
         priority: product.featured
           ? 0.9
           : 0.8,
