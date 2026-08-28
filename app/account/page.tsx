@@ -713,6 +713,15 @@ export default async function AccountPage() {
                       <strong>{ticket.status}</strong>
                       <small>{ticket.priority}</small>
                     </span>
+
+                    <Link
+                      className="accountTicketLink"
+                      href={`/support/${encodeURIComponent(
+                        ticket.id,
+                      )}`}
+                    >
+                      Open
+                    </Link>
                   </div>
                 ))}
               </div>

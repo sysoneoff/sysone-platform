@@ -8,9 +8,6 @@ export const siteConfig = {
   tagline:
     "Software • AI • Games • Digital Products",
 
-  email: "hello@sysone.uz",
-  supportEmail: "support@sysone.uz",
-
   nav: [
     {
       href: "/marketplace",

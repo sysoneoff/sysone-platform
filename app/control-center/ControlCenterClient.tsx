@@ -12,6 +12,7 @@ import {
   Boxes,
   Clipboard,
   Image as ImageIcon,
+  LifeBuoy,
   LoaderCircle,
   LockKeyhole,
   LogOut,
@@ -37,6 +38,10 @@ import {
 import {
   ProjectRequestsManager,
 } from "./ProjectRequestsManager";
+
+import {
+  SupportTicketsManager,
+} from "./SupportTicketsManager";
 
 type AdminProduct = {
   id: string;
@@ -123,6 +128,10 @@ const groups = [
       [
         "Project Requests",
         Workflow,
+      ],
+      [
+        "Support Tickets",
+        LifeBuoy,
       ],
     ],
   },
@@ -1483,6 +1492,15 @@ export function ControlCenterClient() {
     ) {
       return (
         <ProjectRequestsManager />
+      );
+    }
+
+    if (
+      active ===
+      "Support Tickets"
+    ) {
+      return (
+        <SupportTicketsManager />
       );
     }
 
