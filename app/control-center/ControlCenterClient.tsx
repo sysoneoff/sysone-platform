@@ -9,45 +9,26 @@ import {
 } from "react";
 
 import {
-  Activity,
-  BarChart3,
-  Bell,
   Boxes,
-  BrainCircuit,
-  ChevronDown,
   Clipboard,
-  Database,
-  FileText,
-  Gamepad2,
   Image as ImageIcon,
-  LayoutDashboard,
-  LifeBuoy,
   LoaderCircle,
   LockKeyhole,
   LogOut,
-  Menu,
   Package,
   Pencil,
   Plus,
   RefreshCw,
   Save,
   Search,
-  Settings,
   ShieldCheck,
   ToggleLeft,
   ToggleRight,
   Trash2,
   Upload,
-  Users,
   Workflow,
   X,
 } from "lucide-react";
-
-import {
-  adminStats,
-  featureFlags as initialFlags,
-  recentActivity,
-} from "@/data/admin";
 
 import {
   ReleaseManager,
@@ -113,37 +94,11 @@ const blankProduct: ProductDraft = {
 
 const groups = [
   {
-    label: "Overview",
-    items: [
-      [
-        "Dashboard",
-        LayoutDashboard,
-      ],
-      [
-        "Analytics",
-        BarChart3,
-      ],
-    ],
-  },
-
-  {
     label: "Content",
     items: [
       [
-        "Pages",
-        FileText,
-      ],
-      [
-        "Navigation",
-        Menu,
-      ],
-      [
         "Media",
         ImageIcon,
-      ],
-      [
-        "Resources",
-        Boxes,
       ],
     ],
   },
@@ -152,34 +107,12 @@ const groups = [
     label: "Commerce",
     items: [
       [
-        "Marketplace",
-        Package,
-      ],
-      [
         "Products",
         Boxes,
       ],
       [
         "Releases",
         Package,
-      ],
-      [
-        "Orders",
-        Workflow,
-      ],
-    ],
-  },
-
-  {
-    label: "Games",
-    items: [
-      [
-        "Game Studio",
-        Gamepad2,
-      ],
-      [
-        "Players",
-        Users,
       ],
     ],
   },
@@ -188,48 +121,8 @@ const groups = [
     label: "Customers",
     items: [
       [
-        "Users",
-        Users,
-      ],
-      [
-        "Projects",
+        "Project Requests",
         Workflow,
-      ],
-      [
-        "Support",
-        LifeBuoy,
-      ],
-    ],
-  },
-
-  {
-    label: "Intelligence",
-    items: [
-      [
-        "SysOne AI",
-        BrainCircuit,
-      ],
-      [
-        "Notifications",
-        Bell,
-      ],
-    ],
-  },
-
-  {
-    label: "System",
-    items: [
-      [
-        "Security",
-        ShieldCheck,
-      ],
-      [
-        "Database",
-        Database,
-      ],
-      [
-        "Settings",
-        Settings,
       ],
     ],
   },
@@ -509,8 +402,8 @@ function ProductsManager() {
           </h2>
 
           <p>
-            Public katalogni
-            production bazadan
+            D1 katalogini
+            real admin API orqali
             boshqaring.
           </p>
         </div>
@@ -1525,298 +1418,13 @@ function MediaManager() {
   );
 }
 
-function Dashboard() {
-  const [
-    flags,
-    setFlags,
-  ] =
-    useState(
-      initialFlags,
-    );
-
-  return (
-    <>
-      <div className="adminStatGrid">
-        {adminStats.map(
-          (stat) => (
-            <article
-              className="adminStat"
-              key={
-                stat.label
-              }
-            >
-              <small>
-                {
-                  stat.label
-                }
-              </small>
-
-              <strong>
-                {
-                  stat.value
-                }
-              </strong>
-
-              <span>
-                {
-                  stat.change
-                }
-              </span>
-            </article>
-          ),
-        )}
-      </div>
-
-      <div className="adminDashboardGrid">
-        <article className="adminPanel">
-          <div className="adminPanelHead">
-            <span>
-              <strong>
-                Platform
-                overview
-              </strong>
-
-              <small>
-                Operational
-                foundation
-              </small>
-            </span>
-
-            <button
-              type="button"
-            >
-              30 days
-
-              <ChevronDown />
-            </button>
-          </div>
-
-          <div className="fakeChart">
-            {[
-              42,
-              55,
-              48,
-              70,
-              62,
-              88,
-              76,
-              94,
-              82,
-              100,
-              92,
-              112,
-            ].map(
-              (
-                value,
-                index,
-              ) => (
-                <i
-                  key={
-                    index
-                  }
-                  style={{
-                    height:
-                      `${value}px`,
-                  }}
-                />
-              ),
-            )}
-          </div>
-
-          <div className="chartLabels">
-            <span>
-              Users
-            </span>
-
-            <span>
-              Marketplace
-            </span>
-
-            <span>
-              Games
-            </span>
-          </div>
-        </article>
-
-        <article className="adminPanel">
-          <div className="adminPanelHead">
-            <span>
-              <strong>
-                Recent
-                activity
-              </strong>
-
-              <small>
-                Audit-ready
-                event stream
-              </small>
-            </span>
-
-            <Activity />
-          </div>
-
-          <div className="activityList">
-            {recentActivity.map(
-              (
-                activity,
-              ) => (
-                <div
-                  key={
-                    activity.time +
-                    activity.action
-                  }
-                >
-                  <span>
-                    {
-                      activity.time
-                    }
-                  </span>
-
-                  <div>
-                    <strong>
-                      {
-                        activity.action
-                      }
-                    </strong>
-
-                    <small>
-                      {
-                        activity.detail
-                      }
-                    </small>
-                  </div>
-                </div>
-              ),
-            )}
-          </div>
-        </article>
-
-        <article className="adminPanel featurePanel">
-          <div className="adminPanelHead">
-            <span>
-              <strong>
-                Feature flags
-              </strong>
-
-              <small>
-                UI preview —
-                KV wiring
-                keyingi qadamda
-              </small>
-            </span>
-          </div>
-
-          {flags.map(
-            (
-              flag,
-              index,
-            ) => (
-              <button
-                type="button"
-                className="flagRow"
-                key={
-                  flag.key
-                }
-                onClick={() =>
-                  setFlags(
-                    flags.map(
-                      (
-                        item,
-                        itemIndex,
-                      ) =>
-                        itemIndex ===
-                        index
-                          ? {
-                              ...item,
-
-                              enabled:
-                                !item.enabled,
-                            }
-                          : item,
-                    ),
-                  )
-                }
-              >
-                <span>
-                  <strong>
-                    {
-                      flag.name
-                    }
-                  </strong>
-
-                  <small>
-                    {
-                      flag.key
-                    }
-                  </small>
-                </span>
-
-                {flag.enabled ? (
-                  <ToggleRight className="on" />
-                ) : (
-                  <ToggleLeft />
-                )}
-              </button>
-            ),
-          )}
-        </article>
-
-        <article className="adminPanel">
-          <div className="adminPanelHead">
-            <span>
-              <strong>
-                System health
-              </strong>
-
-              <small>
-                Production
-                bindings
-              </small>
-            </span>
-
-            <ShieldCheck />
-          </div>
-
-          {[
-            "Website",
-            "D1 Database",
-            "R2 Assets",
-            "R2 Downloads",
-            "KV Config",
-            "Admin Session",
-          ].map(
-            (item) => (
-              <div
-                className="healthRow"
-                key={
-                  item
-                }
-              >
-                <span>
-                  {item}
-                </span>
-
-                <em>
-                  <i />
-
-                  Operational
-                </em>
-              </div>
-            ),
-          )}
-        </article>
-      </div>
-    </>
-  );
-}
-
 export function ControlCenterClient() {
   const [
     active,
     setActive,
   ] =
     useState(
-      "Dashboard",
+      "Products",
     );
 
   const [
@@ -1842,15 +1450,6 @@ export function ControlCenterClient() {
   }
 
   function renderWorkspace() {
-    if (
-      active ===
-      "Dashboard"
-    ) {
-      return (
-        <Dashboard />
-      );
-    }
-
     if (
       active ===
       "Products"
@@ -1880,7 +1479,7 @@ export function ControlCenterClient() {
 
     if (
       active ===
-      "Projects"
+      "Project Requests"
     ) {
       return (
         <ProjectRequestsManager />
@@ -1888,45 +1487,7 @@ export function ControlCenterClient() {
     }
 
     return (
-      <section className="adminModulePlaceholder">
-        <div className="placeholderIcon">
-          <Settings />
-        </div>
-
-        <span className="eyebrow">
-          MODULE FOUNDATION
-        </span>
-
-        <h2>
-          {active} management
-        </h2>
-
-        <p>
-          Bu modul master
-          arxitekturada mavjud.
-          Stage 2 davomida u
-          D1/R2/KV,
-          permissions va audit
-          log workflow bilan
-          real ishlashga ulanadi.
-        </p>
-
-        <div className="placeholderActions">
-          <button
-            type="button"
-            className="button buttonPrimary"
-          >
-            Create item
-          </button>
-
-          <button
-            type="button"
-            className="button buttonGhost"
-          >
-            View roadmap
-          </button>
-        </div>
-      </section>
+      <ProductsManager />
     );
   }
 
@@ -1947,7 +1508,7 @@ export function ControlCenterClient() {
 
               <small>
                 OWNER /
-                PRODUCTION
+                ADMIN
               </small>
             </span>
           </div>
@@ -2016,19 +1577,6 @@ export function ControlCenterClient() {
             </div>
 
             <div className="controlTopActions">
-              <button
-                type="button"
-                className="controlTopIcon"
-              >
-                <Search />
-              </button>
-
-              <button
-                type="button"
-                className="controlTopIcon"
-              >
-                <Bell />
-              </button>
 
               <div className="ownerChip">
                 <span>
@@ -2072,8 +1620,8 @@ export function ControlCenterClient() {
 
             <span>
               <strong>
-                Production
-                security:
+                Security
+                model:
               </strong>{" "}
               admin secret
               server-side
