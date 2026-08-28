@@ -1,9 +1,15 @@
 import { cookies } from "next/headers";
-import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
 
-export const USER_SESSION_COOKIE = "sysone_session";
+import {
+  getSysOneEnv,
+  requireBinding,
+} from "@/lib/server/cloudflare";
 
-const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30;
+export const USER_SESSION_COOKIE =
+  "sysone_session";
+
+const SESSION_TTL_SECONDS =
+  60 * 60 * 24 * 30;
 
 export type SysOneUser = {
   id: string;
@@ -25,14 +31,20 @@ export type UserSession = {
 };
 
 function getDatabase() {
-  return requireBinding(getSysOneEnv().SYSONE_DB, "SYSONE_DB");
+  return requireBinding(
+    getSysOneEnv().SYSONE_DB,
+    "SYSONE_DB",
+  );
 }
 
-function bytesToBase64Url(bytes: Uint8Array) {
+function bytesToBase64Url(
+  bytes: Uint8Array,
+) {
   let binary = "";
 
   for (const byte of bytes) {
-    binary += String.fromCharCode(byte);
+    binary +=
+      String.fromCharCode(byte);
   }
 
   return btoa(binary)
@@ -42,38 +54,70 @@ function bytesToBase64Url(bytes: Uint8Array) {
 }
 
 function createRandomToken() {
-  const bytes = new Uint8Array(32);
-  crypto.getRandomValues(bytes);
-  return bytesToBase64Url(bytes);
-}
+  const bytes =
+    new Uint8Array(32);
 
-async function sha256(value: string) {
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(value),
+  crypto.getRandomValues(
+    bytes,
   );
 
-  return Array.from(new Uint8Array(digest))
-    .map((byte) => byte.toString(16).padStart(2, "0"))
+  return bytesToBase64Url(
+    bytes,
+  );
+}
+
+async function sha256(
+  value: string,
+) {
+  const digest =
+    await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(
+        value,
+      ),
+    );
+
+  return Array.from(
+    new Uint8Array(digest),
+  )
+    .map((byte) =>
+      byte
+        .toString(16)
+        .padStart(2, "0"),
+    )
     .join("");
 }
 
 export async function createUserSession(
   userId: string,
   options?: {
-    deviceLabel?: string | null;
-    ipHash?: string | null;
+    deviceLabel?:
+      | string
+      | null;
+
+    ipHash?:
+      | string
+      | null;
   },
 ) {
-  const db = getDatabase();
+  const db =
+    getDatabase();
 
-  const sessionId = crypto.randomUUID();
-  const rawToken = createRandomToken();
-  const tokenHash = await sha256(rawToken);
+  const sessionId =
+    crypto.randomUUID();
 
-  const expiresAt = new Date(
-    Date.now() + SESSION_TTL_SECONDS * 1000,
-  ).toISOString();
+  const rawToken =
+    createRandomToken();
+
+  const tokenHash =
+    await sha256(rawToken);
+
+  const expiresAt =
+    new Date(
+      Date.now() +
+        SESSION_TTL_SECONDS *
+          1000,
+    ).toISOString();
 
   await db
     .prepare(
@@ -93,8 +137,10 @@ export async function createUserSession(
       sessionId,
       userId,
       tokenHash,
-      options?.deviceLabel ?? null,
-      options?.ipHash ?? null,
+      options?.deviceLabel ??
+        null,
+      options?.ipHash ??
+        null,
       expiresAt,
     )
     .run();
@@ -109,106 +155,263 @@ export async function createUserSession(
 export async function getUserFromSessionToken(
   token?: string | null,
 ): Promise<SysOneUser | null> {
-  if (!token) return null;
+  if (!token) {
+    return null;
+  }
 
-  const db = getDatabase();
-  const tokenHash = await sha256(token);
+  const db =
+    getDatabase();
 
-  const user = await db
-    .prepare(
-      `
-        SELECT
-          u.id,
-          u.email,
-          u.name,
-          u.image_url,
-          u.role,
-          u.locale,
-          u.created_at,
-          u.updated_at
-        FROM sessions s
-        INNER JOIN users u ON u.id = s.user_id
-        WHERE
-          s.token_hash = ?
-          AND datetime(s.expires_at) > datetime('now')
-        LIMIT 1
-      `,
-    )
-    .bind(tokenHash)
-    .first<SysOneUser>();
+  const tokenHash =
+    await sha256(token);
+
+  const user =
+    await db
+      .prepare(
+        `
+          SELECT
+            u.id,
+            u.email,
+            u.name,
+            u.image_url,
+            u.role,
+            u.locale,
+            u.created_at,
+            u.updated_at
+          FROM sessions s
+          INNER JOIN users u
+            ON u.id = s.user_id
+          WHERE
+            s.token_hash = ?
+            AND datetime(
+              s.expires_at
+            ) > datetime('now')
+          LIMIT 1
+        `,
+      )
+      .bind(tokenHash)
+      .first<SysOneUser>();
 
   return user ?? null;
 }
 
 export async function getCurrentUser() {
-  const cookieStore = await cookies();
+  const cookieStore =
+    await cookies();
 
   return getUserFromSessionToken(
-    cookieStore.get(USER_SESSION_COOKIE)?.value,
+    cookieStore.get(
+      USER_SESSION_COOKIE,
+    )?.value,
   );
 }
 
-export async function revokeUserSession(token?: string | null) {
-  if (!token) return;
+export async function revokeUserSession(
+  token?: string | null,
+) {
+  if (!token) {
+    return;
+  }
 
-  const db = getDatabase();
-  const tokenHash = await sha256(token);
+  const db =
+    getDatabase();
 
-  await db
-    .prepare("DELETE FROM sessions WHERE token_hash = ?")
-    .bind(tokenHash)
-    .run();
-}
-
-export async function revokeAllUserSessions(userId: string) {
-  const db = getDatabase();
-
-  await db
-    .prepare("DELETE FROM sessions WHERE user_id = ?")
-    .bind(userId)
-    .run();
-}
-
-export async function deleteExpiredUserSessions() {
-  const db = getDatabase();
+  const tokenHash =
+    await sha256(token);
 
   await db
     .prepare(
       `
         DELETE FROM sessions
-        WHERE datetime(expires_at) <= datetime('now')
+        WHERE token_hash = ?
+      `,
+    )
+    .bind(tokenHash)
+    .run();
+}
+
+export async function revokeAllUserSessions(
+  userId: string,
+) {
+  const db =
+    getDatabase();
+
+  await db
+    .prepare(
+      `
+        DELETE FROM sessions
+        WHERE user_id = ?
+      `,
+    )
+    .bind(userId)
+    .run();
+}
+
+export async function deleteExpiredUserSessions() {
+  const db =
+    getDatabase();
+
+  await db
+    .prepare(
+      `
+        DELETE FROM sessions
+        WHERE datetime(
+          expires_at
+        ) <= datetime('now')
       `,
     )
     .run();
 }
 
-export function userSessionCookieOptions(maxAge = SESSION_TTL_SECONDS) {
+export function userSessionCookieOptions(
+  maxAge =
+    SESSION_TTL_SECONDS,
+) {
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
+
+    secure:
+      process.env
+        .NODE_ENV ===
+      "production",
+
+    sameSite:
+      "lax" as const,
+
     path: "/",
+
     maxAge,
   };
 }
 
-export function isSafeUserMutation(request: Request) {
-  const fetchSite = request.headers.get("sec-fetch-site");
+function normalizeHost(
+  value: string | null,
+) {
+  if (!value) {
+    return null;
+  }
+
+  const host =
+    value
+      .split(",")[0]
+      ?.trim()
+      .toLowerCase();
+
+  return host || null;
+}
+
+function getRequestHost(
+  request: Request,
+) {
+  /*
+   * Prefer the HTTP Host header.
+   *
+   * OpenNext / Cloudflare preview can
+   * internally rewrite request.url while
+   * preserving the actual browser-facing
+   * Host header.
+   */
+  const host =
+    normalizeHost(
+      request.headers.get(
+        "host",
+      ),
+    );
+
+  if (host) {
+    return host;
+  }
+
+  /*
+   * Cloudflare/proxy fallback.
+   * Host remains preferred so a forwarded
+   * header cannot override it.
+   */
+  const forwardedHost =
+    normalizeHost(
+      request.headers.get(
+        "x-forwarded-host",
+      ),
+    );
+
+  if (forwardedHost) {
+    return forwardedHost;
+  }
+
+  /*
+   * Final fallback for runtimes where
+   * Host headers are unavailable.
+   */
+  try {
+    return new URL(
+      request.url,
+    ).host.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+export function isSafeUserMutation(
+  request: Request,
+) {
+  /*
+   * Browser Fetch Metadata protection.
+   *
+   * same-origin:
+   *   normal application mutation.
+   *
+   * none:
+   *   direct/manual navigation contexts
+   *   supported by some runtimes/tools.
+   *
+   * cross-site / same-site:
+   *   rejected.
+   */
+  const fetchSite =
+    request.headers.get(
+      "sec-fetch-site",
+    );
 
   if (
     fetchSite &&
-    fetchSite !== "same-origin" &&
+    fetchSite !==
+      "same-origin" &&
     fetchSite !== "none"
   ) {
     return false;
   }
 
-  const origin = request.headers.get("origin");
+  const origin =
+    request.headers.get(
+      "origin",
+    );
 
-  if (!origin) return true;
+  /*
+   * Some non-browser clients do not send
+   * Origin. Fetch Metadata check above
+   * remains active when present.
+   */
+  if (!origin) {
+    return true;
+  }
 
   try {
-    return new URL(origin).host === new URL(request.url).host;
+    const originUrl =
+      new URL(origin);
+
+    const requestHost =
+      getRequestHost(
+        request,
+      );
+
+    if (!requestHost) {
+      return false;
+    }
+
+    return (
+      originUrl.host.toLowerCase() ===
+      requestHost
+    );
   } catch {
     return false;
   }
