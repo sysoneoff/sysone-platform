@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -48,6 +49,9 @@ const budgetOptions = [
   "Defined budget",
   "Exploring options",
 ] as const;
+
+const DRAFT_STORAGE_KEY =
+  "sysone.project-request-draft";
 
 type ProjectType =
   (typeof projectTypes)[number];
@@ -191,6 +195,78 @@ export default function ContactPage() {
     useState<SubmittedRequest | null>(
       null,
     );
+
+  const [
+    importedDraft,
+    setImportedDraft,
+  ] = useState(false);
+
+  useEffect(() => {
+    let raw: string | null = null;
+
+    try {
+      raw = window.sessionStorage.getItem(
+        DRAFT_STORAGE_KEY,
+      );
+    } catch {
+      return;
+    }
+
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const draft = JSON.parse(raw) as {
+        projectType?: unknown;
+        description?: unknown;
+        source?: unknown;
+      };
+
+      const typeIsValid =
+        typeof draft.projectType ===
+          "string" &&
+        projectTypes.includes(
+          draft.projectType as ProjectType,
+        );
+
+      const cleanDescription =
+        typeof draft.description ===
+        "string"
+          ? draft.description
+              .trim()
+              .slice(0, 10000)
+          : "";
+
+      if (
+        draft.source !==
+          "brief-builder" ||
+        !typeIsValid ||
+        !cleanDescription
+      ) {
+        return;
+      }
+
+      setProjectType(
+        draft.projectType as ProjectType,
+      );
+      setDescription(cleanDescription);
+      setImportedDraft(true);
+      setStep(1);
+    } catch {
+      // Ignore malformed browser-local
+      // drafts and keep the empty form.
+    } finally {
+      try {
+        window.sessionStorage.removeItem(
+          DRAFT_STORAGE_KEY,
+        );
+      } catch {
+        // The request form remains usable
+        // when browser storage is blocked.
+      }
+    }
+  }, []);
 
   const summary = useMemo(() => {
     const clean =
@@ -468,6 +544,28 @@ export default function ContactPage() {
 
       <section className="section compactTop">
         <div className="shell requestFlow">
+          {importedDraft ? (
+            <div
+              className="plannerHandoffNote"
+              role="status"
+            >
+              <CheckCircle2 />
+
+              <span>
+                <strong>
+                  Brief imported
+                </strong>
+
+                <small>
+                  Project type and description
+                  were carried from the Brief
+                  Builder. Select the target
+                  platforms to continue.
+                </small>
+              </span>
+            </div>
+          ) : null}
+
           {!submitted && (
             <div className="requestSteps">
               {steps.map(
