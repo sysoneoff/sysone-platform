@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight, Box } from "lucide-react";
+
+import { useI18n } from "@/components/I18nProvider";
 import type { PublicProduct } from "@/lib/server/products";
 
 function formatStatus(status: string) {
@@ -9,50 +13,52 @@ function formatStatus(status: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function formatPrice(product: PublicProduct) {
+function formatPrice(
+  product: PublicProduct,
+  lang: string,
+  labels: {
+    free: string;
+    custom: string;
+    comingSoon: string;
+    unavailable: string;
+  },
+) {
   const model = product.pricingModel.toUpperCase();
 
-  if (model === "FREE" || model === "FREEMIUM") {
-    return "Free";
-  }
+  if (model === "FREE" || model === "FREEMIUM") return labels.free;
+  if (model === "CUSTOM") return labels.custom;
+  if (model === "TBD") return labels.comingSoon;
+  if (product.currentPriceMinor <= 0) return labels.unavailable;
 
-  if (model === "CUSTOM") {
-    return "Custom";
-  }
+  const localeMap: Record<string, string> = {
+    uz: "uz-UZ",
+    en: "en-US",
+    ru: "ru-RU",
+    tr: "tr-TR",
+    ar: "ar",
+  };
 
-  if (model === "TBD") {
-    return "Coming soon";
-  }
-
-  if (product.currentPriceMinor <= 0) {
-    return "Unavailable";
-  }
-
-  return new Intl.NumberFormat("uz-UZ", {
+  return new Intl.NumberFormat(localeMap[lang] ?? "uz-UZ", {
     style: "currency",
     currency: product.currency,
   }).format(product.currentPriceMinor / 100);
 }
 
 function getProductHref(product: PublicProduct) {
-  if (product.kind === "GAME") {
-    return `/games/${product.slug}`;
-  }
-
-  return `/products/${product.slug}`;
+  return product.kind === "GAME"
+    ? `/games/${product.slug}`
+    : `/products/${product.slug}`;
 }
 
 function getMediaUrl(key: string) {
-  const safePath = key
+  return `/api/media/${key
     .split("/")
     .map((part) => encodeURIComponent(part))
-    .join("/");
-
-  return `/api/media/${safePath}`;
+    .join("/")}`;
 }
 
 function getPrimaryMedia(product: PublicProduct) {
-  const preferredTypes = ["COVER", "HERO", "ICON"];
+  const preferredTypes = ["COVER", "HERO", "BANNER", "ICON"];
 
   return (
     product.media.find((media) =>
@@ -63,11 +69,8 @@ function getPrimaryMedia(product: PublicProduct) {
   );
 }
 
-export function ProductCard({
-  product,
-}: {
-  product: PublicProduct;
-}) {
+export function ProductCard({ product }: { product: PublicProduct }) {
+  const { lang, t } = useI18n();
   const primaryMedia = getPrimaryMedia(product);
 
   const platforms = Array.from(
@@ -79,9 +82,20 @@ export function ProductCard({
     product.tagline ??
     product.description;
 
+  const price = formatPrice(product, lang, {
+    free: t("common.free"),
+    custom: t("common.customPrice"),
+    comingSoon: t("common.comingSoon"),
+    unavailable: t("common.unavailable"),
+  });
+
   return (
-    <article className="surface productCard">
-      <div className="productVisual">
+    <Link
+      href={getProductHref(product)}
+      className="v3ProductCard"
+      aria-label={t("card.openProduct", { name: product.name })}
+    >
+      <div className="v3ProductArt">
         {primaryMedia ? (
           <img
             src={getMediaUrl(primaryMedia.key)}
@@ -89,52 +103,43 @@ export function ProductCard({
             loading="lazy"
           />
         ) : (
-          <div
-            className="productMonogram"
-            aria-label={`${product.name} artwork unavailable`}
-          >
-            <Box size={28} />
+          <div className="v3ProductFallback">
+            <span>{product.name.charAt(0).toUpperCase()}</span>
+            <Box size={24} strokeWidth={1.35} />
           </div>
         )}
 
-        <span className="statusPill">
+        <span className="v3CardStatus">
+          <i />
           {formatStatus(product.status)}
+        </span>
+
+        <span className="v3CardArrow" aria-hidden="true">
+          <ArrowUpRight size={18} />
         </span>
       </div>
 
-      <div className="cardBody">
-        <div className="metaLine">
+      <div className="v3ProductContent">
+        <div className="v3CardTopline">
           <span>
-            {product.category ??
-              product.kind.replaceAll("_", " ")}
+            {product.category ?? product.kind.replaceAll("_", " ")}
           </span>
-
-          {product.developerName && (
-            <span>{product.developerName}</span>
-          )}
+          {product.developerName && <span>{product.developerName}</span>}
         </div>
 
         <h3>{product.name}</h3>
 
         {description && <p>{description}</p>}
 
-        {platforms.length > 0 && (
-          <div className="platformRow">
-            {platforms.map((platform) => (
-              <span key={platform}>{platform}</span>
-            ))}
-          </div>
-        )}
-
-        <div className="cardFooter">
-          <strong>{formatPrice(product)}</strong>
-
-          <Link href={getProductHref(product)}>
-            View
-            <ArrowUpRight size={15} />
-          </Link>
+        <div className="v3ProductFooter">
+          <strong>{price}</strong>
+          <span>
+            {platforms.length > 0
+              ? platforms.slice(0, 3).join(" · ")
+              : t("common.digitalProduct")}
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

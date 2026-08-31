@@ -1,131 +1,95 @@
-import Link from "next/link";
-import {
-  ArrowUpRight,
-  Gamepad2,
-} from "lucide-react";
+"use client";
 
+import Link from "next/link";
+import { ArrowUpRight, Gamepad2 } from "lucide-react";
+
+import { useI18n } from "@/components/I18nProvider";
 import type { PublicProduct } from "@/lib/server/products";
 
 function formatStatus(status: string) {
   return status
     .replaceAll("_", " ")
     .toLowerCase()
-    .replace(/\b\w/g, (letter) =>
-      letter.toUpperCase(),
-    );
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function getMediaUrl(key: string) {
-  const safePath = key
+  return `/api/media/${key
     .split("/")
     .map((part) => encodeURIComponent(part))
-    .join("/");
-
-  return `/api/media/${safePath}`;
+    .join("/")}`;
 }
 
 function getPrimaryMedia(game: PublicProduct) {
-  const preferredTypes = [
-    "HERO",
-    "COVER",
-    "BANNER",
-    "ICON",
-  ];
+  const preferredTypes = ["HERO", "COVER", "BANNER", "ICON"];
 
   return (
     game.media.find((media) =>
-      preferredTypes.includes(
-        media.type.toUpperCase(),
-      ),
+      preferredTypes.includes(media.type.toUpperCase()),
     ) ??
     game.media[0] ??
     null
   );
 }
 
-function getDescription(game: PublicProduct) {
-  return (
-    game.shortDescription ??
-    game.tagline ??
-    game.description ??
-    null
-  );
-}
-
-export function GameCard({
-  game,
-}: {
-  game: PublicProduct;
-}) {
+export function GameCard({ game }: { game: PublicProduct }) {
+  const { t } = useI18n();
   const primaryMedia = getPrimaryMedia(game);
-
   const platforms = Array.from(
-    new Set(
-      game.platforms.map(
-        (item) => item.platform,
-      ),
-    ),
+    new Set(game.platforms.map((item) => item.platform)),
   );
 
-  const description = getDescription(game);
+  const description =
+    game.shortDescription ?? game.tagline ?? game.description;
 
   return (
-    <article className="surface gameCard">
-      <div className="gameArt">
+    <Link
+      href={`/games/${game.slug}`}
+      className="v3GameCard"
+      aria-label={t("card.openGame", { name: game.name })}
+    >
+      <div className="v3GameArt">
         {primaryMedia ? (
           <img
             src={getMediaUrl(primaryMedia.key)}
-            alt={
-              primaryMedia.alt ??
-              `${game.name} artwork`
-            }
+            alt={primaryMedia.alt ?? `${game.name} artwork`}
             loading="lazy"
           />
         ) : (
-          <div
-            className="gameArtFallback"
-            aria-label={`${game.name} artwork unavailable`}
-          >
-            <Gamepad2 size={44} />
+          <div className="v3GameFallback">
+            <Gamepad2 size={42} strokeWidth={1.2} />
+            <span>SYS/ONE GAMES</span>
           </div>
         )}
 
-        <span className="statusPill">
+        <div className="v3GameShade" />
+
+        <span className="v3CardStatus">
+          <i />
           {formatStatus(game.status)}
         </span>
-      </div>
 
-      <div className="cardBody">
-        <div className="metaLine">
-          <span>
-            {game.category ?? "Game"}
-          </span>
+        <span className="v3CardArrow" aria-hidden="true">
+          <ArrowUpRight size={18} />
+        </span>
 
-          {platforms.length > 0 && (
-            <span>
-              {platforms.join(" • ")}
-            </span>
-          )}
-        </div>
-
-        <h3>{game.name}</h3>
-
-        {description && (
-          <p>{description}</p>
-        )}
-
-        <div className="cardFooter">
-          <span>
-            {game.developerName ??
-              "SysOne Games"}
-          </span>
-
-          <Link href={`/games/${game.slug}`}>
-            View
-            <ArrowUpRight size={15} />
-          </Link>
+        <div className="v3GameTitle">
+          <span>{game.category ?? t("card.game")}</span>
+          <h3>{game.name}</h3>
         </div>
       </div>
-    </article>
+
+      <div className="v3GameContent">
+        {description && <p>{description}</p>}
+        <div>
+          <span>{game.developerName ?? t("card.sysoneGames")}</span>
+          <span>
+            {platforms.length > 0
+              ? platforms.slice(0, 3).join(" · ")
+              : t("card.game")}
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }
