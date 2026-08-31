@@ -1,8 +1,20 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Box,
+  BrainCircuit,
+  BriefcaseBusiness,
+  FlaskConical,
+  Gamepad2,
+  ShoppingBag,
+  Sparkles,
+} from "lucide-react";
 
 import { ProductCard } from "@/components/ProductCard";
+import { T } from "@/components/T";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   listPublishedProducts,
   type PublicProduct,
@@ -11,9 +23,9 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "SysOne Store",
+  title: "SysOne",
   description:
-    "Discover software, games, AI tools and digital products published by SysOne.",
+    "Software, AI tools, games and digital systems built by SysOne.",
 };
 
 function productHref(product: PublicProduct) {
@@ -31,55 +43,88 @@ function productDescription(product: PublicProduct) {
   );
 }
 
-function sortByUpdated(
-  products: PublicProduct[],
-) {
-  return [...products].sort((a, b) => {
-    return (
+function sortByUpdated(products: PublicProduct[]) {
+  return [...products].sort(
+    (a, b) =>
       new Date(b.updatedAt).getTime() -
-      new Date(a.updatedAt).getTime()
-    );
-  });
+      new Date(a.updatedAt).getTime(),
+  );
 }
 
+const divisions = [
+  {
+    labelKey: "common.software",
+    detailKey: "home.div.software.detail",
+    href: "/products",
+    icon: Box,
+  },
+  {
+    labelKey: "common.ai",
+    detailKey: "home.div.ai.detail",
+    href: "/ai",
+    icon: BrainCircuit,
+  },
+  {
+    labelKey: "common.games",
+    detailKey: "home.div.games.detail",
+    href: "/games",
+    icon: Gamepad2,
+  },
+  {
+    labelKey: "home.div.business",
+    detailKey: "home.div.business.detail",
+    href: "/contact",
+    icon: BriefcaseBusiness,
+  },
+  {
+    labelKey: "common.labs",
+    detailKey: "home.div.labs.detail",
+    href: "/labs",
+    icon: FlaskConical,
+  },
+] as const satisfies readonly {
+  labelKey: TranslationKey;
+  detailKey: TranslationKey;
+  href: string;
+  icon: typeof Box;
+}[];
+
 function StoreSection({
-  title,
-  description,
+  eyebrowKey,
+  titleKey,
+  descriptionKey,
   products,
   href,
-  linkLabel = "View all",
+  linkLabelKey,
 }: {
-  title: string;
-  description: string;
+  eyebrowKey: TranslationKey;
+  titleKey: TranslationKey;
+  descriptionKey: TranslationKey;
   products: PublicProduct[];
   href: string;
-  linkLabel?: string;
+  linkLabelKey: TranslationKey;
 }) {
-  if (products.length === 0) {
-    return null;
-  }
+  if (products.length === 0) return null;
 
   return (
-    <section className="section">
+    <section className="v3CatalogSection">
       <div className="shell">
-        <div className="sectionMiniHead">
+        <div className="v3SectionHead">
           <div>
-            <h2>{title}</h2>
-            <p>{description}</p>
+            <span className="v3Kicker"><T id={eyebrowKey} /></span>
+            <h2><T id={titleKey} /></h2>
+            <p><T id={descriptionKey} /></p>
           </div>
 
-          <Link href={href}>
-            {linkLabel}
+          <Link href={href} className="v3SectionLink">
+            <T id={linkLabelKey} />
             <ArrowRight size={16} />
           </Link>
         </div>
 
-        <div className="cardGrid3">
-          {products.slice(0, 6).map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
+        <div className="v3ProductGrid">
+          {products.slice(0, 8).map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
@@ -94,23 +139,9 @@ export default async function HomePage() {
     (product) => product.kind === "SOFTWARE",
   );
 
-  const games = products.filter(
-    (product) => product.kind === "GAME",
-  );
-
-  const aiTools = products.filter(
-    (product) => product.kind === "AI_TOOL",
-  );
-
-  const digitalProducts = products.filter(
-    (product) => product.kind === "DIGITAL_PRODUCT",
-  );
-
   const featured = products
     .filter(
-      (product) =>
-        product.featured ||
-        product.featuredRank > 0,
+      (product) => product.featured || product.featuredRank > 0,
     )
     .sort((a, b) => {
       if (b.featuredRank !== a.featuredRank) {
@@ -124,178 +155,196 @@ export default async function HomePage() {
     });
 
   const heroProduct =
-    featured[0] ??
-    sortByUpdated(products)[0] ??
-    null;
+    featured[0] ?? sortByUpdated(products)[0] ?? null;
 
-  const newest = sortByUpdated(products).slice(
-    0,
-    6,
-  );
+  const newest = sortByUpdated(products).slice(0, 8);
 
   return (
     <>
-      <section className="heroSection">
-        <div className="shell">
-          <div className="pageHero">
-            <span className="eyebrow">
-              SYSONE STORE
+      <section className="v3Hero">
+        <div className="shell v3HeroLayout">
+          <div className="v3HeroCopy">
+            <span className="v3Kicker v3KickerLive">
+              <i />
+              <T id="home.kicker" />
             </span>
 
-            {heroProduct ? (
-              <>
-                <p className="metaLine">
-                  <span>
-                    {heroProduct.category ??
-                      heroProduct.kind.replaceAll(
-                        "_",
-                        " ",
-                      )}
-                  </span>
+            <h1>
+              <T id="home.hero.line1" />
+              <br />
+              <span><T id="home.hero.line2" /></span>
+            </h1>
 
-                  <span>
-                    {heroProduct.status
-                      .replaceAll("_", " ")
-                      .toLowerCase()}
-                  </span>
-                </p>
+            <p><T id="home.hero.description" /></p>
 
-                <h1>{heroProduct.name}</h1>
+            <div className="v3HeroActions">
+              <Link className="button buttonPrimary" href="/marketplace">
+                <ShoppingBag size={17} />
+                <T id="home.exploreStore" />
+                <ArrowRight size={17} />
+              </Link>
 
-                {productDescription(heroProduct) && (
-                  <p>
-                    {productDescription(
-                      heroProduct,
-                    )}
-                  </p>
-                )}
+              <Link className="button buttonGhost" href="/about">
+                <T id="home.about" />
+              </Link>
+            </div>
 
-                <div className="heroActions">
-                  <Link
-                    className="button buttonPrimary buttonLarge"
-                    href={productHref(
-                      heroProduct,
-                    )}
-                  >
-                    View product
-                    <ArrowRight size={17} />
-                  </Link>
-
-                  <Link
-                    className="button buttonGhost buttonLarge"
-                    href="/marketplace"
-                  >
-                    Browse store
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <>
-                <h1>
-                  Software, games, AI tools
-                  and digital products.
-                </h1>
-
-                <p>
-                  The SysOne Store currently
-                  has no published products.
-                </p>
-
-                <div className="heroActions">
-                  <Link
-                    className="button buttonPrimary buttonLarge"
-                    href="/marketplace"
-                  >
-                    Open store
-                    <ArrowRight size={17} />
-                  </Link>
-                </div>
-              </>
+            {products.length > 0 && (
+              <div className="v3LiveCatalog">
+                <span>
+                  <i />
+                  <T id="home.liveCatalog" />
+                </span>
+                <strong>{products.length}</strong>
+                <small><T id="home.publishedProducts" /></small>
+              </div>
             )}
+          </div>
+
+          <div className="v3SystemCore" aria-hidden="true">
+            <div className="v3CoreGrid" />
+            <div className="v3CoreGlow" />
+            <div className="v3CoreOrbit orbitOne"><i /></div>
+            <div className="v3CoreOrbit orbitTwo"><i /></div>
+            <div className="v3CoreOrbit orbitThree" />
+
+            <div className="v3CoreMark">
+              <Image
+                src="/brand/sysone-symbol.webp"
+                width={94}
+                height={94}
+                alt=""
+                priority
+              />
+              <span>SYSONE</span>
+            </div>
+
+            <span className="v3CoreTag tagSoftware">
+              <Box size={14} />
+              <T id="common.software" />
+            </span>
+            <span className="v3CoreTag tagAi">
+              <BrainCircuit size={14} />
+              <T id="common.ai" />
+            </span>
+            <span className="v3CoreTag tagGames">
+              <Gamepad2 size={14} />
+              <T id="common.games" />
+            </span>
+            <span className="v3CoreTag tagLabs">
+              <Sparkles size={14} />
+              <T id="common.labs" />
+            </span>
           </div>
         </div>
       </section>
 
-      {products.length > 0 && (
-        <section className="brandStrip">
-          <div className="shell brandStripInner">
-            <span>
-              {products.length} Published
-            </span>
+      <section className="v3DivisionRail">
+        <div className="shell v3DivisionGrid">
+          {divisions.map(({ labelKey, detailKey, href, icon: Icon }) => (
+            <Link href={href} key={href}>
+              <span className="v3DivisionIcon">
+                <Icon size={20} />
+              </span>
+              <span>
+                <strong><T id={labelKey} /></strong>
+                <small><T id={detailKey} /></small>
+              </span>
+              <ArrowRight size={16} />
+            </Link>
+          ))}
+        </div>
+      </section>
 
-            <i />
+      {heroProduct && (
+        <section className="v3Spotlight">
+          <div className="shell v3SpotlightLayout">
+            <div className="v3SpotlightCopy">
+              <span className="v3Kicker"><T id="home.featuredProduct" /></span>
+              <h2>{heroProduct.name}</h2>
 
-            <span>
-              {software.length} Software
-            </span>
+              {productDescription(heroProduct) && (
+                <p>{productDescription(heroProduct)}</p>
+              )}
 
-            <i />
+              <div className="v3SpotlightMeta">
+                <span>
+                  {heroProduct.category ??
+                    heroProduct.kind.replaceAll("_", " ")}
+                </span>
+                <span>
+                  {heroProduct.status.replaceAll("_", " ").toLowerCase()}
+                </span>
+              </div>
 
-            <span>
-              {games.length} Games
-            </span>
+              <Link
+                href={productHref(heroProduct)}
+                className="button buttonGhost"
+              >
+                <T id="home.openProduct" />
+                <ArrowRight size={16} />
+              </Link>
+            </div>
 
-            <i />
+            <ProductCard product={heroProduct} />
+          </div>
+        </section>
+      )}
 
-            <span>
-              {aiTools.length} AI Tools
-            </span>
-
-            <i />
-
-            <span>
-              {digitalProducts.length} Digital
-            </span>
+      {products.length === 0 && (
+        <section className="v3EnvironmentEmpty">
+          <div className="shell">
+            <div>
+              <ShoppingBag size={28} />
+              <span className="v3Kicker"><T id="home.catalogState" /></span>
+              <h2><T id="home.noPublished" /></h2>
+              <p><T id="home.noPublishedText" /></p>
+            </div>
           </div>
         </section>
       )}
 
       <StoreSection
-        title="Featured"
-        description="Products currently highlighted in the SysOne Store."
+        eyebrowKey="home.selected"
+        titleKey="home.featuredReleases"
+        descriptionKey="home.featuredReleasesText"
         products={featured}
         href="/marketplace"
-        linkLabel="Explore store"
+        linkLabelKey="home.viewStore"
       />
 
       <StoreSection
-        title="New & updated"
-        description="Recently added or updated products from the live SysOne catalog."
+        eyebrowKey="home.recent"
+        titleKey="home.newUpdated"
+        descriptionKey="home.newUpdatedText"
         products={newest}
         href="/marketplace"
+        linkLabelKey="home.browseCatalog"
       />
 
       <StoreSection
-        title="Software"
-        description="Applications and utilities published by SysOne."
+        eyebrowKey="home.softwareKicker"
+        titleKey="home.builtForWork"
+        descriptionKey="home.builtForWorkText"
         products={software}
         href="/products"
-        linkLabel="All software"
+        linkLabelKey="home.allSoftware"
       />
 
-      <StoreSection
-        title="Games"
-        description="Games and interactive experiences from SysOne Games."
-        products={games}
-        href="/games"
-        linkLabel="All games"
-      />
+      <section className="v3Closing">
+        <div className="shell v3ClosingLayout">
+          <div>
+            <span className="v3Kicker"><T id="home.customKicker" /></span>
+            <h2><T id="home.needSystem" /></h2>
+            <p><T id="home.needSystemText" /></p>
+          </div>
 
-      <StoreSection
-        title="AI Tools"
-        description="AI-powered products published in the SysOne ecosystem."
-        products={aiTools}
-        href="/marketplace"
-        linkLabel="Explore AI tools"
-      />
-
-      <StoreSection
-        title="Digital Products"
-        description="Downloadable digital products available through SysOne."
-        products={digitalProducts}
-        href="/marketplace"
-        linkLabel="Explore digital products"
-      />
+          <Link href="/contact" className="button buttonPrimary">
+            <T id="home.startProject" />
+            <ArrowRight size={17} />
+          </Link>
+        </div>
+      </section>
     </>
   );
 }
