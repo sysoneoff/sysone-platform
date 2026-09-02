@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { I18nProvider } from "@/components/I18nProvider";
 import { PWARegister } from "@/components/PWARegister";
+import { SessionProvider } from "@/components/SessionProvider";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -64,9 +65,11 @@ export default function RootLayout({
     <html lang="uz" data-theme="dark">
       <body>
         <I18nProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <SessionProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </SessionProvider>
         </I18nProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://sysone.top/#organization","name":"SysOne","url":"https://sysone.top","logo":"https://sysone.top/brand/sysone-primary.png"},{"@type":"WebSite","@id":"https://sysone.top/#website","url":"https://sysone.top","name":"SysOne","publisher":{"@id":"https://sysone.top/#organization"}}]})}} />
         <PWARegister />

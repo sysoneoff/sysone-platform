@@ -23,6 +23,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { useI18n } from "@/components/I18nProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Logo } from "@/components/Logo";
+import { useSession } from "@/components/SessionProvider";
 import { siteConfig } from "@/lib/site";
 import type { TranslationKey } from "@/lib/i18n";
 
@@ -63,6 +64,12 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { t } = useI18n();
+  const { authenticated, loading, user } = useSession();
+
+  const accountLabel =
+    !loading && authenticated && user?.name
+      ? user.name.trim().split(/\s+/)[0]
+      : t("common.account");
 
   const desktopNav = siteConfig.nav.filter(
     (item) => item.href !== "/account",
@@ -75,6 +82,7 @@ export function Header() {
   );
 
   function labelFor(href: string, fallback: string) {
+    if (href === "/account") return accountLabel;
     const key = navKeys[href];
     return key ? t(key) : fallback;
   }
@@ -116,9 +124,10 @@ export function Header() {
                 isActive(pathname, "/account") ? "active" : ""
               }`}
               href="/account"
+              title={authenticated ? user?.name ?? undefined : undefined}
             >
               <UserRound size={16} />
-              <span>{t("common.account")}</span>
+              <span>{accountLabel}</span>
             </Link>
 
             <button

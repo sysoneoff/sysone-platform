@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CheckCircle2, Headphones, LifeBuoy, LoaderCircle, LogIn, Send } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { useI18n } from "@/components/I18nProvider";
+import { useSession } from "@/components/SessionProvider";
 import type { TranslationKey } from "@/lib/i18n";
 
 const categories = [
@@ -33,6 +34,7 @@ function errorKey(error: string): TranslationKey {
 
 export default function SupportPage() {
   const { t } = useI18n();
+  const { authenticated, loading } = useSession();
   const [category, setCategory] = useState<SupportCategory>("Technical issue");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
@@ -67,7 +69,9 @@ export default function SupportPage() {
 
     <section className="section compactTop"><div className="shell supportGrid">
       <div className="supportOptions">
-        <article className="surface"><LogIn/><h2>{t("support.idRequired")}</h2><p>{t("support.idRequiredText")}</p><Link className="button buttonGhost" href="/login">{t("support.signIn")}</Link></article>
+        {!loading && !authenticated ? (
+          <article className="surface"><LogIn/><h2>{t("support.idRequired")}</h2><p>{t("support.idRequiredText")}</p><Link className="button buttonGhost" href="/login">{t("support.signIn")}</Link></article>
+        ) : null}
         <article className="surface"><LifeBuoy/><h2>{t("support.trackEvery")}</h2><p>{t("support.trackEveryText")}</p><Link className="button buttonGhost" href="/account#support">{t("support.openAccount")}</Link></article>
       </div>
 
@@ -85,7 +89,7 @@ export default function SupportPage() {
           <textarea rows={8} value={message} disabled={submitting} minLength={20} maxLength={10000} required placeholder={t("support.messagePlaceholder")} onChange={(event)=>{setMessage(event.target.value);setError("")}}/>
         </label>
         {error?<div className="formError" role="alert">{t(errorKey(error))}{error==="authentication_required"?<Link href="/login">{t("support.openSignIn")}</Link>:null}</div>:null}
-        <button className="button buttonPrimary" type="submit" disabled={submitting}>
+        <button className="button buttonPrimary" type="submit" disabled={submitting || loading || !authenticated}>
           {submitting?<LoaderCircle className="spin" size={16}/>:<Send size={16}/>}
           {submitting?t("support.submitting"):t("support.submit")}
         </button>
