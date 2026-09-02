@@ -10,7 +10,7 @@ import { PWARegister } from "@/components/PWARegister";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://sysone-platform.sysoneoff.workers.dev";
+  "https://sysone.top";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

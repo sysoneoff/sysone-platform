@@ -5,7 +5,7 @@ import { listPublishedProducts } from "@/lib/server/products";
 export const dynamic = "force-dynamic";
 
 const FALLBACK_SITE_URL =
-  "https://sysone-platform.sysoneoff.workers.dev";
+  "https://sysone.top";
 
 function getBaseUrl() {
   const configured =
