@@ -23,9 +23,9 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "SysOne",
+  title: { absolute: "SysOne — Software, AI Tools and Digital Products" },
   description:
-    "Software, AI tools, games and digital systems built by SysOne.",
+    "Discover SysOne software, AI tools, games and digital products from the official SysOne platform.",
 };
 
 function productHref(product: PublicProduct) {
