@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { Compass, Layers3, ShieldCheck, Sparkles } from "lucide-react";
+export const metadata: Metadata = {
+  title: { absolute: "About SysOne — Digital Product Company" },
+  description: "Learn about SysOne, a digital product company building software, AI tools, games, business systems and experimental technology.",
+};
+
 const values=[
  {icon:Compass,title:"Clarity before code",text:"Define the problem, user and outcome before choosing technology."},
  {icon:Layers3,title:"Systems over isolated screens",text:"Design products around the complete workflow, lifecycle and operating model."},

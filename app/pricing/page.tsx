@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
+export const metadata: Metadata = {
+  title: { absolute: "SysOne Pricing — Custom Digital Product Projects" },
+  description: "Explore the SysOne pricing model for custom software, business systems, AI projects and advanced digital products.",
+};
+
 const plans=[
  {name:"Start",sub:"For focused websites and MVPs",price:"Scope-based",features:["Discovery","Premium UI/UX","Responsive build","Launch support"]},
  {name:"Business",sub:"For operational systems",price:"Custom",featured:true,features:["Everything in Start","Admin dashboard","Automation","Analytics","Integrations","SysOne Care"]},

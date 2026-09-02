@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -17,6 +18,11 @@ import {
 import {
   getCurrentUser,
 } from "@/lib/server/user-auth";
+
+export const metadata: Metadata = {
+  title: "Support Ticket",
+  robots: { index: false, follow: false },
+};
 
 export const dynamic =
   "force-dynamic";

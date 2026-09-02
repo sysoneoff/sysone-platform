@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { Beaker, BrainCircuit, Gamepad2, Map, Mic2, ScanEye } from "lucide-react";
+export const metadata: Metadata = {
+  title: { absolute: "SysOne Labs — Experimental Technology and Prototypes" },
+  description: "Explore SysOne Labs, the experimental space for AI, games, computer vision, voice, maps and early-stage digital product prototypes.",
+};
+
 const labs=[
   {icon:BrainCircuit,title:"AI Experiments",text:"Search, assistants, agents and intelligent product workflows."},
   {icon:Gamepad2,title:"Game Prototypes",text:"Gameplay mechanics, multiplayer concepts and cross-platform experiments."},
