@@ -68,6 +68,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
         </I18nProvider>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://sysone.top/#organization","name":"SysOne","url":"https://sysone.top","logo":"https://sysone.top/brand/sysone-primary.png"},{"@type":"WebSite","@id":"https://sysone.top/#website","url":"https://sysone.top","name":"SysOne","publisher":{"@id":"https://sysone.top/#organization"}}]})}} />
         <PWARegister />
       </body>
     </html>
