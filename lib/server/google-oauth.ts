@@ -1,3 +1,4 @@
+import { normalizeAuthReturnTo } from "@/lib/auth-return";
 import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
 
 const GOOGLE_AUTHORIZATION_URL =
@@ -36,6 +37,7 @@ export type GoogleOAuthTransaction = {
   version: 1;
   state: string;
   verifier: string;
+  returnTo: string;
   createdAt: number;
 };
 
@@ -122,6 +124,10 @@ export async function createGoogleAuthorizationRequest(
   request: Request,
 ) {
   const { clientId } = getGoogleConfig();
+  const requestUrl = new URL(request.url);
+  const returnTo = normalizeAuthReturnTo(
+    requestUrl.searchParams.get("returnTo"),
+  );
 
   const state = createRandomValue();
   const verifier = createRandomValue(48);
@@ -186,6 +192,7 @@ export async function createGoogleAuthorizationRequest(
     version: 1,
     state,
     verifier,
+    returnTo,
     createdAt: Date.now(),
   };
 
@@ -236,6 +243,7 @@ export function decodeGoogleOAuthTransaction(
       version: 1,
       state: parsed.state,
       verifier: parsed.verifier,
+      returnTo: normalizeAuthReturnTo(parsed.returnTo),
       createdAt: parsed.createdAt,
     };
   } catch {

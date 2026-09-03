@@ -162,10 +162,7 @@ export async function GET(
 
     const response =
       NextResponse.redirect(
-        new URL(
-          "/account",
-          request.url,
-        ),
+        new URL(transaction.returnTo, request.url),
         {
           status: 302,
           headers: {

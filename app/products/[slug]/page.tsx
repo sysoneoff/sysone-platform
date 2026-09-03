@@ -7,6 +7,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { ProductPurchaseButton } from "@/components/ProductPurchaseButton";
+
 import {
   getPublishedProductBySlug,
   type PublicProduct,
@@ -210,9 +212,17 @@ export default async function ProductPage({
             )}
 
             <div className="heroActions">
-              <span className="button buttonPrimary buttonLarge">
-                {formatPrice(product)}
-              </span>
+              {product.pricingModel.toUpperCase() === "ONE_TIME" &&
+              product.currentPriceMinor > 0 ? (
+                <ProductPurchaseButton
+                  productSlug={product.slug}
+                  priceLabel={formatPrice(product)}
+                />
+              ) : (
+                <span className="button buttonPrimary buttonLarge">
+                  {formatPrice(product)}
+                </span>
+              )}
 
               <Link
                 className="button buttonGhost buttonLarge"
