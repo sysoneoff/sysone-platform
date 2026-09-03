@@ -12,13 +12,14 @@ export default function PrivacyPage() {
       <h1>Privacy Policy</h1>
       <p className="legalLead">
         This operational draft describes how SysOne currently handles information
-        across accounts, project requests, support, product entitlements,
+        across accounts, Google and Telegram authentication, sessions, project
+        requests, support, product entitlements,
         software licenses and device activation. It requires qualified legal
         review before being treated as final legal advice or a jurisdiction-
         specific compliance statement.
       </p>
 
-      <p>Effective date: September 2, 2026.</p>
+      <p>Operational draft updated: September 3, 2026.</p>
 
       <h2>Information used for accounts</h2>
       <p>
@@ -29,14 +30,24 @@ export default function PrivacyPage() {
         provider-specific account identifier.
       </p>
 
+      <h2>Google and Telegram sign-in</h2>
+      <p>
+        Google sign-in requests OpenID, email and profile access and may provide
+        a provider account identifier, verified email address, name, profile
+        picture and locale. Telegram sign-in requests OpenID and profile access
+        and may provide a Telegram account identifier, name, profile picture and
+        username.
+      </p>
+
       <h2>Sessions and account security</h2>
       <p>
         SysOne creates authenticated sessions so you can remain signed in.
-        Session records include operational identifiers, timestamps, expiry
-        information and security-related values used to manage active sessions.
-        Session and authentication cookies are used for sign-in and account
-        security. Temporary OAuth transaction cookies are also used while a
-        Google or Telegram sign-in is in progress.
+        Server-side session records include a user reference, hashed session token,
+        optional device label, IP-derived hash, creation time and expiration time.
+        Raw session tokens are not stored in the session table. The SysOne session
+        cookie is HTTP-only, uses SameSite protection and is marked Secure in
+        production. Temporary OAuth transaction cookies are used while Google or
+        Telegram sign-in is in progress.
       </p>
 
       <h2>Project requests</h2>

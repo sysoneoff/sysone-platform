@@ -17,7 +17,7 @@ export default function TermsPage() {
         being treated as final jurisdiction-specific terms.
       </p>
 
-      <p>Effective date: September 2, 2026.</p>
+      <p>Operational draft updated: September 3, 2026.</p>
 
       <h2>Using SysOne</h2>
       <p>
@@ -30,7 +30,8 @@ export default function TermsPage() {
 
       <h2>Accounts</h2>
       <p>
-        Some features require a SysOne account. You are responsible for using
+        Some features require a SysOne account. Supported sign-in methods currently
+        include Google and Telegram. You are responsible for using
         your account through authorized sign-in methods and for protecting
         access to your authenticated sessions. You must not attempt to access
         another user&apos;s account, session, support records or product access.
