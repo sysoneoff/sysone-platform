@@ -317,7 +317,13 @@ async function hydrateProducts(rows: ProductRow[]): Promise<PublicProduct[]> {
   }
 
   return rows.map((row) => {
-    const promotion = promotionByProduct.get(row.id) ?? null;
+    const candidatePromotion = promotionByProduct.get(row.id) ?? null;
+    const promotion =
+      candidatePromotion &&
+      candidatePromotion.currency === row.currency &&
+      candidatePromotion.salePriceMinor <= row.price_minor
+        ? candidatePromotion
+        : null;
 
     return {
       id: row.id,
