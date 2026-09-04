@@ -12,6 +12,7 @@ import {
   Boxes,
   Clipboard,
   Image as ImageIcon,
+  LayoutDashboard,
   LifeBuoy,
   LoaderCircle,
   LockKeyhole,
@@ -27,6 +28,7 @@ import {
   ToggleRight,
   Trash2,
   Upload,
+  Users,
   Workflow,
   X,
 } from "lucide-react";
@@ -42,6 +44,10 @@ import {
 import {
   SupportTicketsManager,
 } from "./SupportTicketsManager";
+
+import { DashboardManager } from "./DashboardManager";
+import { UsersManager } from "./UsersManager";
+import { EntitlementsManager } from "./EntitlementsManager";
 
 type AdminProduct = {
   id: string;
@@ -99,40 +105,31 @@ const blankProduct: ProductDraft = {
 
 const groups = [
   {
-    label: "Content",
+    label: "Overview",
     items: [
-      [
-        "Media",
-        ImageIcon,
-      ],
+      ["Dashboard", LayoutDashboard],
     ],
   },
-
+  {
+    label: "Content",
+    items: [
+      ["Media", ImageIcon],
+    ],
+  },
   {
     label: "Commerce",
     items: [
-      [
-        "Products",
-        Boxes,
-      ],
-      [
-        "Releases",
-        Package,
-      ],
+      ["Products", Boxes],
+      ["Releases", Package],
+      ["Entitlements", ShieldCheck],
     ],
   },
-
   {
     label: "Customers",
     items: [
-      [
-        "Project Requests",
-        Workflow,
-      ],
-      [
-        "Support Tickets",
-        LifeBuoy,
-      ],
+      ["Users", Users],
+      ["Project Requests", Workflow],
+      ["Support Tickets", LifeBuoy],
     ],
   },
 ] as const;
@@ -1433,7 +1430,7 @@ export function ControlCenterClient() {
     setActive,
   ] =
     useState(
-      "Products",
+      "Dashboard",
     );
 
   const [
@@ -1459,54 +1456,26 @@ export function ControlCenterClient() {
   }
 
   function renderWorkspace() {
-    if (
-      active ===
-      "Products"
-    ) {
-      return (
-        <ProductsManager />
-      );
+    switch (active) {
+      case "Dashboard":
+        return <DashboardManager />;
+      case "Products":
+        return <ProductsManager />;
+      case "Releases":
+        return <ReleaseManager />;
+      case "Entitlements":
+        return <EntitlementsManager />;
+      case "Media":
+        return <MediaManager />;
+      case "Users":
+        return <UsersManager />;
+      case "Project Requests":
+        return <ProjectRequestsManager />;
+      case "Support Tickets":
+        return <SupportTicketsManager />;
+      default:
+        return <DashboardManager />;
     }
-
-    if (
-      active ===
-      "Releases"
-    ) {
-      return (
-        <ReleaseManager />
-      );
-    }
-
-    if (
-      active ===
-      "Media"
-    ) {
-      return (
-        <MediaManager />
-      );
-    }
-
-    if (
-      active ===
-      "Project Requests"
-    ) {
-      return (
-        <ProjectRequestsManager />
-      );
-    }
-
-    if (
-      active ===
-      "Support Tickets"
-    ) {
-      return (
-        <SupportTicketsManager />
-      );
-    }
-
-    return (
-      <ProductsManager />
-    );
   }
 
   return (
