@@ -1,0 +1,18 @@
+{
+  "$schema":"./node_modules/wrangler/config-schema.json",
+  "name":"sysone-runtime",
+  "main":"src/index.js",
+  "compatibility_date":"2026-08-18",
+  "compatibility_flags":["nodejs_compat"],
+  "routes":[{"pattern":"runtime.sysone.top","custom_domain":true}],
+  "observability":{"enabled":true},
+  "d1_databases":[{
+    "binding":"SYSONE_DB",
+    "database_name":"sysone-production",
+    "database_id":"0b6ef9ed-dc38-4c44-94b3-e947147ce8bf"
+  }],
+  "r2_buckets":[{
+    "binding":"SYSONE_RUNTIME",
+    "bucket_name":"sysone-runtime"
+  }]
+}
