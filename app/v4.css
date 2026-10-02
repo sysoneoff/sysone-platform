@@ -899,3 +899,385 @@ html[data-theme="light"] .v41DockItem.active{color:#111418;background:rgba(0,0,0
     animation:none!important;
   }
 }
+
+/* =========================================================
+   SYSONE V4.3 - PREMIUM UI POLISH
+   ========================================================= */
+
+:root{
+  --v43-bg:#0b0d11;
+  --v43-panel:#101319;
+  --v43-edge:rgba(255,255,255,.105);
+  --v43-highlight:rgba(144,177,255,.72);
+  --v43-shadow:0 20px 60px rgba(0,0,0,.22);
+}
+
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(circle at 16% -10%,rgba(93,125,190,.075),transparent 31%),
+    radial-gradient(circle at 88% 12%,rgba(68,93,146,.045),transparent 28%),
+    var(--v43-bg)!important;
+}
+
+main{position:relative;isolation:isolate}
+main:before{
+  content:"";
+  position:fixed;
+  inset:62px 0 0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.34;
+  background:
+    linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:96px 96px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.82),transparent 78%);
+}
+
+.v41Header{
+  border-bottom-color:rgba(255,255,255,.075)!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+.v4HeaderBrand{min-width:118px}
+.v41HeaderStatus{
+  min-height:30px;
+  padding-left:16px;
+  border-left:1px solid rgba(255,255,255,.075);
+}
+
+.v4HeroLayout,
+.v4Shelf>.shell,
+.v41RuntimeBandInner,
+.v4ClosingInner,
+.v3PageHero>.shell,
+.pageHero.shell,
+.v3CatalogPageBody>.shell,
+.section>.shell,
+.productDetailHero>.shell,
+.gameDetailHero>.shell{
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--v43-shadow);
+}
+
+.v4HeroLayout{
+  min-height:420px;
+  background:
+    linear-gradient(135deg,rgba(126,165,255,.038),transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.012),rgba(255,255,255,.006)),
+    var(--v43-panel)!important;
+}
+.v4HeroLayout:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:32px;
+  bottom:32px;
+  width:2px;
+  border-radius:999px;
+  background:linear-gradient(to bottom,transparent,var(--v43-highlight),transparent);
+  opacity:.64;
+}
+.v4HeroCopy{position:relative;z-index:1}
+.v4HeroCopy h1{
+  max-width:720px!important;
+  font-size:clamp(40px,4.7vw,64px)!important;
+  line-height:.97!important;
+}
+.v4HeroCopy>p{max-width:610px!important}
+.v4HeroMeta{
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.065);
+}
+.v4HeroMeta span svg{color:#829dd6}
+
+.v4FeaturePanel{
+  border-color:rgba(255,255,255,.105)!important;
+  background:linear-gradient(180deg,#12151b,#0f1217)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.2);
+}
+
+.v4ModeStrip .shell{
+  gap:0;
+  box-shadow:0 16px 46px rgba(0,0,0,.14);
+}
+.v4ModeStrip a{
+  position:relative;
+  min-height:82px!important;
+  padding:14px 17px!important;
+  display:grid!important;
+  grid-template-columns:38px minmax(0,1fr) 18px!important;
+  align-items:center!important;
+  align-content:center!important;
+  gap:12px!important;
+  transition:background .18s ease,color .18s ease,transform .18s ease!important;
+}
+.v4ModeStrip a:hover{
+  z-index:2;
+  background:rgba(255,255,255,.037)!important;
+}
+.v43ModeIcon{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:11px;
+  background:#11151b;
+  color:#91a8dc;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.v4ModeStrip a:hover .v43ModeIcon{
+  transform:translateY(-1px);
+  border-color:rgba(145,168,220,.28);
+  background:#151a22;
+}
+.v43ModeText{
+  min-width:0;
+  display:grid!important;
+  gap:4px!important;
+}
+.v43ModeText strong{
+  color:#edf0f4;
+  font-size:12px!important;
+}
+.v43ModeText small{
+  color:#69727e;
+  font-size:8px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.v43ModeArrow{
+  color:#545e6b;
+  transition:transform .18s ease,color .18s ease;
+}
+.v4ModeStrip a:hover .v43ModeArrow{
+  transform:translateX(2px);
+  color:#aab7d5;
+}
+
+.v41RuntimeBandInner{
+  background:
+    linear-gradient(115deg,rgba(116,151,224,.045),transparent 46%),
+    var(--v43-panel)!important;
+}
+.v41RuntimeBandInner:before{
+  content:"";
+  position:absolute;
+  width:220px;
+  aspect-ratio:1;
+  right:-90px;
+  top:-120px;
+  border:1px solid rgba(126,165,255,.08);
+  border-radius:50%;
+  box-shadow:
+    0 0 0 42px rgba(126,165,255,.014),
+    0 0 0 84px rgba(126,165,255,.008);
+}
+.v41RuntimeBandInner>div{position:relative;z-index:1}
+
+.v4Shelf>.shell{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.008)),
+    var(--v43-panel)!important;
+}
+.v4ShelfAlt>.shell{
+  background:
+    linear-gradient(180deg,rgba(126,165,255,.025),rgba(255,255,255,.009)),
+    var(--v43-panel)!important;
+}
+.v4SectionHeader{
+  position:relative;
+  padding-bottom:19px;
+  border-bottom:1px solid rgba(255,255,255,.065);
+}
+.v4SectionHeader:before{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-1px;
+  width:56px;
+  height:1px;
+  background:#829dd6;
+}
+.v4SectionHeader h2{
+  font-size:clamp(27px,2.9vw,40px)!important;
+}
+.v4SectionHeader>a{
+  min-height:34px;
+  padding:0 10px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  background:rgba(255,255,255,.018);
+}
+
+.v4ProductGrid{gap:15px!important}
+.v3ProductCard,
+.v3GameCard{
+  position:relative;
+  border-color:rgba(255,255,255,.09)!important;
+  background:linear-gradient(180deg,#11141a,#0f1217)!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.12)!important;
+  transition:
+    transform .22s cubic-bezier(.2,.8,.2,1),
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease!important;
+}
+.v3ProductCard:hover,
+.v3GameCard:hover{
+  transform:translateY(-4px)!important;
+  border-color:rgba(147,174,232,.22)!important;
+  background:linear-gradient(180deg,#151920,#11151b)!important;
+  box-shadow:0 22px 48px rgba(0,0,0,.2)!important;
+}
+.v3ProductArt{overflow:hidden}
+.v3ProductArt img{
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .3s ease;
+}
+.v3ProductCard:hover .v3ProductArt img{
+  transform:scale(1.025);
+  filter:saturate(1.04) contrast(1.015);
+}
+.v3ProductContent h3{font-size:17px!important}
+
+.v4ClosingInner{
+  background:
+    linear-gradient(120deg,rgba(126,165,255,.035),transparent 43%),
+    var(--v43-panel)!important;
+}
+
+.v41DockWrap{bottom:16px!important}
+.v41Dock{
+  padding:6px 7px!important;
+  gap:3px!important;
+  border-color:rgba(255,255,255,.14)!important;
+  background:rgba(17,20,26,.78)!important;
+  box-shadow:
+    0 20px 55px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+.v41DockItem{
+  min-width:69px!important;
+  height:56px!important;
+  border-radius:13px!important;
+}
+.v41DockItem:hover{
+  transform:translateY(-3px) scale(1.045)!important;
+  background:rgba(255,255,255,.05)!important;
+}
+.v41DockItem.active{
+  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.035))!important;
+}
+.v41DockIcon{position:relative;z-index:0}
+
+.v4Shelf,
+.v41RuntimeBand,
+.v4Closing{
+  content-visibility:auto;
+  contain-intrinsic-size:1px 420px;
+}
+
+@media(max-width:760px){
+  main:before{
+    background-size:70px 70px;
+    opacity:.22;
+  }
+
+  .v4HeroLayout{
+    min-height:0;
+    gap:24px!important;
+  }
+
+  .v4HeroCopy h1{
+    font-size:clamp(35px,9.7vw,49px)!important;
+    max-width:560px!important;
+  }
+
+  .v4ModeStrip .shell{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+  }
+
+  .v4ModeStrip a{
+    min-height:76px!important;
+    grid-template-columns:34px minmax(0,1fr)!important;
+    padding:12px!important;
+  }
+
+  .v43ModeIcon{
+    width:34px;
+    height:34px;
+  }
+
+  .v43ModeArrow{display:none}
+
+  .v41DockWrap{
+    left:10px!important;
+    right:10px!important;
+    bottom:max(9px,env(safe-area-inset-bottom))!important;
+  }
+
+  .v41Dock{
+    min-height:64px;
+    padding:6px!important;
+    border-radius:21px!important;
+    background:rgba(17,20,26,.84)!important;
+  }
+
+  .v41DockItem{
+    height:52px!important;
+    border-radius:12px!important;
+  }
+
+  .v41DockItem:hover{transform:none!important}
+  .v41DockIcon svg{
+    width:20px!important;
+    height:20px!important;
+  }
+  .v41DockLabel{font-size:7.5px!important}
+  .v41DockReserve{height:92px!important}
+}
+
+@media(max-width:480px){
+  .shell{width:calc(100% - 20px)!important}
+
+  .v4HeroLayout,
+  .v4Shelf>.shell,
+  .v41RuntimeBandInner,
+  .v4ClosingInner,
+  .v3PageHero>.shell,
+  .pageHero.shell,
+  .v3CatalogPageBody>.shell,
+  .section>.shell{
+    padding:17px!important;
+  }
+
+  .v4HeroCopy h1{
+    font-size:clamp(33px,10.5vw,44px)!important;
+  }
+
+  .v41RuntimeStats{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+  }
+
+  .v41DockWrap{
+    left:6px!important;
+    right:6px!important;
+  }
+
+  .v41DockItem{min-width:0!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v3ProductCard,
+  .v3GameCard,
+  .v3ProductArt img,
+  .v41DockItem,
+  .v43ModeIcon,
+  .v43ModeArrow{
+    transition:none!important;
+  }
+}

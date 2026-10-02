@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Gamepad2, Globe2, MonitorDown, Sparkles } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Code2, Gamepad2, Globe2, MonitorDown, Sparkles } from "lucide-react";
 
 import { ProductCard } from "@/components/ProductCard";
 import { getPublicUiConfig } from "@/lib/server/platform-config";
@@ -67,10 +67,26 @@ export default async function HomePage(){
 
     <section className="v4ModeStrip">
       <div className="shell">
-        <Link href="/products"><strong>Software</strong><span>Windows / Android / Web</span></Link>
-        <Link href="/games"><strong>Games</strong><span>Web / PC / Mobile</span></Link>
-        <Link href="/ai"><strong>AI</strong><span>Tools / assistants</span></Link>
-        <Link href="/contact"><strong>Custom</strong><span>Buyurtma asosida tizimlar</span></Link>
+        <Link href="/products">
+          <span className="v43ModeIcon"><Code2 size={18}/></span>
+          <span className="v43ModeText"><strong>Software</strong><small>Windows / Android / Web</small></span>
+          <ArrowRight className="v43ModeArrow" size={14}/>
+        </Link>
+        <Link href="/games">
+          <span className="v43ModeIcon"><Gamepad2 size={18}/></span>
+          <span className="v43ModeText"><strong>Games</strong><small>Web / PC / Mobile</small></span>
+          <ArrowRight className="v43ModeArrow" size={14}/>
+        </Link>
+        <Link href="/ai">
+          <span className="v43ModeIcon"><Sparkles size={18}/></span>
+          <span className="v43ModeText"><strong>AI</strong><small>Tools / assistants</small></span>
+          <ArrowRight className="v43ModeArrow" size={14}/>
+        </Link>
+        <Link href="/contact">
+          <span className="v43ModeIcon"><BriefcaseBusiness size={18}/></span>
+          <span className="v43ModeText"><strong>Custom</strong><small>Buyurtma asosida tizimlar</small></span>
+          <ArrowRight className="v43ModeArrow" size={14}/>
+        </Link>
       </div>
     </section>
 
