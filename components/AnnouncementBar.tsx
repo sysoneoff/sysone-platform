@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { CSSProperties } from "react";
 import Link from "next/link";
@@ -54,6 +54,6 @@ export function AnnouncementBar(){
         })}
       </div>
     </div>
-    <button type="button" onClick={()=>setHidden(true)} aria-label="EвЂ™lon lentasini yopish"><X size={14}/></button>
+    <button type="button" onClick={()=>setHidden(true)} aria-label="E'lon lentasini yopish"><X size={14}/></button>
   </div>;
 }

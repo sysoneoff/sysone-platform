@@ -7,6 +7,7 @@ const nextConfig:NextConfig={
   turbopack:{root:process.cwd()},
   images:{unoptimized:true},
   experimental:{optimizePackageImports:["lucide-react"]},
+
   async headers(){
     return [{
       source:"/:path*",
@@ -18,11 +19,11 @@ const nextConfig:NextConfig={
           key:"Content-Security-Policy",
           value:[
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline'",
+            "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob:",
             "font-src 'self' data:",
-            "connect-src 'self' https://runtime.sysone.top https://*.sysone.top",
+            "connect-src 'self' https://runtime.sysone.top https://*.sysone.top https://cloudflareinsights.com https://*.cloudflareinsights.com",
             "frame-src 'self' https://runtime.sysone.top https://*.sysone.top",
             "object-src 'none'",
             "base-uri 'self'",
@@ -30,10 +31,14 @@ const nextConfig:NextConfig={
             "frame-ancestors 'self'",
           ].join("; "),
         },
-        {key:"Permissions-Policy",value:'camera=(self "https://runtime.sysone.top"), microphone=(self "https://runtime.sysone.top"), geolocation=(self "https://runtime.sysone.top"), fullscreen=(self "https://runtime.sysone.top")'},
+        {
+          key:"Permissions-Policy",
+          value:'camera=(self "https://runtime.sysone.top"), microphone=(self "https://runtime.sysone.top"), geolocation=(self "https://runtime.sysone.top"), fullscreen=(self "https://runtime.sysone.top")'
+        },
         {key:"X-Frame-Options",value:"SAMEORIGIN"},
       ],
     }];
   },
 };
+
 export default nextConfig;

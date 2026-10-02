@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import {
@@ -36,7 +36,7 @@ function formatDate(v:any){if(!v)return "вЂ”";const d=new Date(String(v));re
 const NAV=[
   ["Asosiy",[
     ["Overview","overview",LayoutDashboard],
-    ["EвЂ™lonlar","announcements",Megaphone],
+    ["E'lonlar","announcements",Megaphone],
     ["Bosh sahifa & Dock","experience",LayoutDashboard],
   ]],
   ["Mahsulotlar",[
@@ -86,14 +86,14 @@ function Overview(){
     ["Projects",data.counts.projects,Workflow],["Open tickets",data.counts.openTickets,LifeBuoy],["Announcements",data.counts.announcements,Megaphone],
   ]:[];
 
-  return <Workspace eyebrow="OWNER OVERVIEW" title="SysOne holati" description="D1, R2, commerce va runtime boвЂyicha qisqa koвЂrinish."
+  return <Workspace eyebrow="OWNER OVERVIEW" title="SysOne holati" description="D1, R2, commerce va runtime bo'yicha qisqa ko'rinish."
     actions={<button className="ovIconBtn" onClick={()=>void load()}><RefreshCw size={15}/></button>}>
     {error?<div className="ovError">{error}</div>:null}
-    {!data?<div className="ovLoading"><LoaderCircle className="spin"/> MaвЂ™lumotlar yuklanmoqda...</div>:<>
+    {!data?<div className="ovLoading"><LoaderCircle className="spin"/> Ma'lumotlar yuklanmoqda...</div>:<>
       <div className="ovStats">{cards.map(([name,value,Icon]:any)=><article key={name}><Icon size={17}/><span><small>{name}</small><strong>{value}</strong></span></article>)}</div>
       <div className="ovPanel">
-        <div className="ovPanelHead"><strong>SoвЂnggi audit</strong><small>Owner actions</small></div>
-        <div className="ovAuditList">{(data.audit??[]).map((row:any)=><div key={row.id}><span><strong>{row.action}</strong><small>{row.entity_type} В· {row.entity_id??"вЂ”"}</small></span><time>{formatDate(row.created_at)}</time></div>)}</div>
+        <div className="ovPanelHead"><strong>So'nggi audit</strong><small>Owner actions</small></div>
+        <div className="ovAuditList">{(data.audit??[]).map((row:any)=><div key={row.id}><span><strong>{row.action}</strong><small>{row.entity_type} / {row.entity_id??"вЂ”"}</small></span><time>{formatDate(row.created_at)}</time></div>)}</div>
       </div>
     </>}
   </Workspace>;
@@ -108,18 +108,18 @@ function Announcements(){
       method:editing.id?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(editing),
     }));setEditing(null);await load();
   }catch(err){setError(err instanceof Error?err.message:"save_failed")}}
-  async function remove(id:string){if(!confirm("EвЂ™lon oвЂchirilsinmi?"))return;await json(await fetch(`/api/admin/v4/announcements/${id}`,{method:"DELETE"}));await load()}
+  async function remove(id:string){if(!confirm("E'lon o'chirilsinmi?"))return;await json(await fetch(`/api/admin/v4/announcements/${id}`,{method:"DELETE"}));await load()}
   const blank={label:"YANGI",title:"",href:"",style:"NEW",priority:0,enabled:true,startsAt:"",endsAt:""};
 
-  return <Workspace eyebrow="HEADER TICKER" title="EвЂ™lon va reklama lentasi" description="Bosh sahifa header tepasidagi yangi oвЂyin, dastur, update va aksiyalar."
-    actions={<button className="button buttonPrimary" onClick={()=>setEditing({...blank})}><Plus size={15}/> Yangi eвЂ™lon</button>}>
+  return <Workspace eyebrow="HEADER TICKER" title="E'lon va reklama lentasi" description="Bosh sahifa header tepasidagi yangi o'yin, dastur, update va aksiyalar."
+    actions={<button className="button buttonPrimary" onClick={()=>setEditing({...blank})}><Plus size={15}/> Yangi e'lon</button>}>
     {error?<div className="ovError">{error}</div>:null}
     <div className="ovCards">{items.map(item=><article key={item.id} className="ovCard">
-      <div className="ovCardMain"><span className={`ovTag ${item.enabled?"live":""}`}>{item.enabled?"LIVE":"OFF"}</span><div><small>{item.label??item.style}</small><strong>{item.title}</strong><p>{item.href||"Link yoвЂq"} В· priority {item.priority}</p></div></div>
+      <div className="ovCardMain"><span className={`ovTag ${item.enabled?"live":""}`}>{item.enabled?"LIVE":"OFF"}</span><div><small>{item.label??item.style}</small><strong>{item.title}</strong><p>{item.href||"Link yo'q"} / priority {item.priority}</p></div></div>
       <div className="ovRowActions"><button onClick={()=>setEditing({...item,startsAt:item.startsAt??"",endsAt:item.endsAt??""})}><Pencil size={14}/></button><button className="danger" onClick={()=>void remove(item.id)}><Trash2 size={14}/></button></div>
     </article>)}</div>
     {editing?<div className="ovModal"><form className="ovDrawer" onSubmit={save}>
-      <header><div><span>ANNOUNCEMENT</span><h3>{editing.id?"EвЂ™lonni tahrirlash":"Yangi eвЂ™lon"}</h3></div><button type="button" onClick={()=>setEditing(null)}><X/></button></header>
+      <header><div><span>ANNOUNCEMENT</span><h3>{editing.id?"E'lonni tahrirlash":"Yangi e'lon"}</h3></div><button type="button" onClick={()=>setEditing(null)}><X/></button></header>
       <div className="ovForm">
         <label className="wide"><span>Matn</span><input value={editing.title} onChange={e=>setEditing({...editing,title:e.target.value})} required/></label>
         <label><span>Label</span><input value={editing.label??""} onChange={e=>setEditing({...editing,label:e.target.value})}/></label>
@@ -173,10 +173,10 @@ function ProductDetailsDrawer({product,onClose}:{product:Product;onClose:()=>voi
         <label><span>Release date</span><input value={d.profile.releaseDate} onChange={e=>setD({...d,profile:{...d.profile,releaseDate:e.target.value}})}/></label>
         <label><span>Age rating</span><input value={d.profile.ageRating} onChange={e=>setD({...d,profile:{...d.profile,ageRating:e.target.value}})}/></label>
         <label><span>Featured rank</span><input type="number" min={0} value={d.profile.featuredRank} onChange={e=>setD({...d,profile:{...d.profile,featuredRank:Number(e.target.value)}})}/></label>
-        <label className="wide"><span>Tags В· vergul bilan</span><input value={(d.tags??[]).join(", ")} onChange={e=>setD({...d,tags:e.target.value.split(",").map((x:string)=>x.trim()).filter(Boolean)})}/></label>
+        <label className="wide"><span>Tags / vergul bilan</span><input value={(d.tags??[]).join(", ")} onChange={e=>setD({...d,tags:e.target.value.split(",").map((x:string)=>x.trim()).filter(Boolean)})}/></label>
       </div></section>
 
-      <section><div className="ovDetailSectionHead"><h4>Platformalar va tizim talablari</h4><button type="button" onClick={()=>setD({...d,platforms:[...(d.platforms??[]),{platform:"WEB",architecture:"",minOs:"",minSystem:"",recommendedSystem:""}]})}><Plus size={13}/> QoвЂshish</button></div>
+      <section><div className="ovDetailSectionHead"><h4>Platformalar va tizim talablari</h4><button type="button" onClick={()=>setD({...d,platforms:[...(d.platforms??[]),{platform:"WEB",architecture:"",minOs:"",minSystem:"",recommendedSystem:""}]})}><Plus size={13}/> Qo'shish</button></div>
         <div className="ovRepeatList">{(d.platforms??[]).map((row:any,i:number)=><div className="ovRepeatRow" key={i}>
           <input placeholder="Platform" value={row.platform} onChange={e=>{const a=[...d.platforms];a[i]={...row,platform:e.target.value};setD({...d,platforms:a})}}/>
           <input placeholder="Architecture" value={row.architecture??""} onChange={e=>{const a=[...d.platforms];a[i]={...row,architecture:e.target.value};setD({...d,platforms:a})}}/>
@@ -200,15 +200,15 @@ function ProductDetailsDrawer({product,onClose}:{product:Product;onClose:()=>voi
         <div className="ovAttachedMedia">{(d.media??[]).map((m:any,i:number)=><div key={`${m.key}-${i}`}><span><strong>{m.type}</strong><small>{m.key}</small></span><input placeholder="Alt text" value={m.alt??""} onChange={e=>{const a=[...d.media];a[i]={...m,alt:e.target.value};setD({...d,media:a})}}/><button type="button" className="danger" onClick={()=>setD({...d,media:d.media.filter((_:any,n:number)=>n!==i)})}><Trash2 size={13}/></button></div>)}</div>
       </section>
 
-      <section><h4>Promotion</h4>{!d.promotion?<button type="button" className="ovAddInline" onClick={()=>setD({...d,promotion:{enabled:true,salePriceMinor:0,currency:product.currency||"UZS",startsAt:"",endsAt:""}})}><Plus size={13}/> Aksiya qoвЂshish</button>:<div className="ovForm">
-        <label><span>Sale price В· minor</span><input type="number" min={0} value={d.promotion.salePriceMinor} onChange={e=>setD({...d,promotion:{...d.promotion,salePriceMinor:Number(e.target.value)}})}/></label>
+      <section><h4>Promotion</h4>{!d.promotion?<button type="button" className="ovAddInline" onClick={()=>setD({...d,promotion:{enabled:true,salePriceMinor:0,currency:product.currency||"UZS",startsAt:"",endsAt:""}})}><Plus size={13}/> Aksiya qo'shish</button>:<div className="ovForm">
+        <label><span>Sale price / minor</span><input type="number" min={0} value={d.promotion.salePriceMinor} onChange={e=>setD({...d,promotion:{...d.promotion,salePriceMinor:Number(e.target.value)}})}/></label>
         <label><span>Currency</span><input value={d.promotion.currency} onChange={e=>setD({...d,promotion:{...d.promotion,currency:e.target.value}})}/></label>
         <label><span>Starts</span><input value={d.promotion.startsAt??""} onChange={e=>setD({...d,promotion:{...d.promotion,startsAt:e.target.value}})}/></label>
         <label><span>Ends</span><input value={d.promotion.endsAt??""} onChange={e=>setD({...d,promotion:{...d.promotion,endsAt:e.target.value}})}/></label>
-        <button type="button" className="ovDangerText" onClick={()=>setD({...d,promotion:null})}>PromotionвЂ™ni olib tashlash</button>
+        <button type="button" className="ovDangerText" onClick={()=>setD({...d,promotion:null})}>Promotion'ni olib tashlash</button>
       </div>}</section>
 
-      <section><h4>Related products</h4><div className="ovRelationGrid">{(d.availableProducts??[]).map((p:any)=><label key={p.id}><input type="checkbox" checked={(d.relatedProductIds??[]).includes(p.id)} onChange={e=>setD({...d,relatedProductIds:e.target.checked?[...(d.relatedProductIds??[]),p.id]:(d.relatedProductIds??[]).filter((x:string)=>x!==p.id)})}/><span><strong>{p.name}</strong><small>{p.kind} В· {p.slug}</small></span></label>)}</div></section>
+      <section><h4>Related products</h4><div className="ovRelationGrid">{(d.availableProducts??[]).map((p:any)=><label key={p.id}><input type="checkbox" checked={(d.relatedProductIds??[]).includes(p.id)} onChange={e=>setD({...d,relatedProductIds:e.target.checked?[...(d.relatedProductIds??[]),p.id]:(d.relatedProductIds??[]).filter((x:string)=>x!==p.id)})}/><span><strong>{p.name}</strong><small>{p.kind} / {p.slug}</small></span></label>)}</div></section>
     </div>
     <footer><button type="button" className="button buttonGhost" onClick={onClose}>Bekor</button><button className="button buttonPrimary" disabled={saving}>{saving?<LoaderCircle className="spin" size={15}/>:<Save size={15}/>} Barcha detallarni saqlash</button></footer>
   </form></div>;
@@ -221,7 +221,7 @@ function Catalog(){
   const list=useMemo(()=>products.filter(p=>`${p.name} ${p.slug} ${p.kind} ${p.category??""}`.toLowerCase().includes(query.toLowerCase())),[products,query]);
   const blank={slug:"",name:"",kind:"SOFTWARE",category:"",description:"",status:"DRAFT",pricingModel:"FREE",priceMinor:0,currency:"UZS",featured:false,published:false};
   async function save(e:FormEvent){e.preventDefault();try{await json(await fetch(edit.id?`/api/admin/products/${edit.id}`:"/api/admin/products",{method:edit.id?"PUT":"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(edit)}));setEdit(null);await load()}catch(err){setError(err instanceof Error?err.message:"save_failed")}}
-  async function remove(p:Product){if(!confirm(`${p.name} oвЂchirilsinmi?`))return;await json(await fetch(`/api/admin/products/${p.id}`,{method:"DELETE"}));await load()}
+  async function remove(p:Product){if(!confirm(`${p.name} o'chirilsinmi?`))return;await json(await fetch(`/api/admin/products/${p.id}`,{method:"DELETE"}));await load()}
 
   return <Workspace eyebrow="PRODUCT CATALOG" title="Katalog" description="Software, game va boshqa mahsulotlarning asosiy metadata qismi."
     actions={<button className="button buttonPrimary" onClick={()=>setEdit({...blank})}><Plus size={15}/> Mahsulot</button>}>
@@ -259,13 +259,13 @@ function RuntimeManager(){
   async function openBuilds(p:RuntimeProduct){setBuildProduct(p);setFile(null);setVersion(p.activeVersion??"1.0.0");try{setBuilds((await json(await fetch(`/api/admin/v4/runtimes/${p.productId}`,{cache:"no-store"}))).builds??[])}catch(e){setError(e instanceof Error?e.message:"builds_failed")}}
   async function upload(e:FormEvent){e.preventDefault();if(!buildProduct||!file)return;setBusy(true);try{const body=new FormData();body.append("file",file);body.append("version",version);body.append("activate","true");await json(await fetch(`/api/admin/v4/runtimes/${buildProduct.productId}/upload`,{method:"POST",body}));await openBuilds(buildProduct);await load()}catch(err){setError(err instanceof Error?err.message:"upload_failed")}finally{setBusy(false)}}
   async function activate(id:string){if(!buildProduct)return;await json(await fetch(`/api/admin/v4/builds/${id}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({productId:buildProduct.productId,action:"activate"})}));await openBuilds(buildProduct);await load()}
-  async function removeBuild(id:string){if(!buildProduct||!confirm("Build oвЂchirilsinmi?"))return;await json(await fetch(`/api/admin/v4/builds/${id}?productId=${encodeURIComponent(buildProduct.productId)}`,{method:"DELETE"}));await openBuilds(buildProduct);await load()}
+  async function removeBuild(id:string){if(!buildProduct||!confirm("Build o'chirilsinmi?"))return;await json(await fetch(`/api/admin/v4/builds/${id}?productId=${encodeURIComponent(buildProduct.productId)}`,{method:"DELETE"}));await openBuilds(buildProduct);await load()}
 
-  return <Workspace eyebrow="WEB RUNTIME" title="Web Apps & Games" description="Web mahsulotni external URL bilan ulang yoki ZIP static buildni SysOne Runtime R2вЂ™ga yuklang."
+  return <Workspace eyebrow="WEB RUNTIME" title="Web Apps & Games" description="Web mahsulotni external URL bilan ulang yoki ZIP static buildni SysOne Runtime R2'ga yuklang."
     actions={<button className="ovIconBtn" onClick={()=>void load()}><RefreshCw size={15}/></button>}>
     {error?<div className="ovError">{error}</div>:null}
     <div className="ovCards">{products.map(p=><article key={p.productId} className="ovRuntimeCard">
-      <div className="ovRuntimeIdentity"><span className="ovRuntimeIcon">{p.kind==="GAME"?<Gamepad2 size={18}/>:<Boxes size={18}/>}</span><div><strong>{p.name}</strong><small>{p.slug} В· {p.kind}</small></div></div>
+      <div className="ovRuntimeIdentity"><span className="ovRuntimeIcon">{p.kind==="GAME"?<Gamepad2 size={18}/>:<Boxes size={18}/>}</span><div><strong>{p.name}</strong><small>{p.slug} / {p.kind}</small></div></div>
       <div className="ovRuntimeMeta"><span>{p.deliveryMode}</span><span>{p.runtimeType}</span><span>{p.activeVersion?`v${p.activeVersion}`:`${p.buildCount} builds`}</span></div>
       <div className="ovRowActions"><button onClick={()=>setEdit({...p})}><Settings size={14}/></button><button onClick={()=>void openBuilds(p)}><Upload size={14}/></button></div>
     </article>)}</div>
@@ -286,11 +286,11 @@ function RuntimeManager(){
     {buildProduct?<div className="ovModal"><div className="ovDrawer ovBuildDrawer"><header><div><span>STATIC WEB BUILDS</span><h3>{buildProduct.name}</h3></div><button onClick={()=>setBuildProduct(null)}><X/></button></header>
       <form className="ovBuildUpload" onSubmit={upload}>
         <label><span>Version</span><input value={version} onChange={e=>setVersion(e.target.value)} required/></label>
-        <label className="wide"><span>ZIP static bundle В· index.html rootвЂ™da boвЂlsin В· max 25 MB</span><input type="file" accept=".zip,application/zip" onChange={e=>setFile(e.target.files?.[0]??null)} required/></label>
+        <label className="wide"><span>ZIP static bundle / index.html root'da bo'lsin / max 25 MB</span><input type="file" accept=".zip,application/zip" onChange={e=>setFile(e.target.files?.[0]??null)} required/></label>
         <button className="button buttonPrimary" disabled={busy||!file}>{busy?<LoaderCircle className="spin" size={15}/>:<Upload size={15}/>} Yuklash va aktivlashtirish</button>
       </form>
       <div className="ovBuildList">{builds.map((b:any)=><div key={b.id} className={b.id===buildProduct.activeBuildId?"active":""}>
-        <span><FileArchive size={15}/><div><strong>v{b.version}</strong><small>{b.file_count} files В· {bytes(Number(b.size_bytes??0))} В· {formatDate(b.created_at)}</small></div></span>
+        <span><FileArchive size={15}/><div><strong>v{b.version}</strong><small>{b.file_count} files / {bytes(Number(b.size_bytes??0))} / {formatDate(b.created_at)}</small></div></span>
         <div className="ovRowActions">{b.id!==buildProduct.activeBuildId?<button onClick={()=>void activate(b.id)}><BadgeCheck size={14}/></button>:<span className="ovTag live">ACTIVE</span>}<button className="danger" disabled={b.id===buildProduct.activeBuildId} onClick={()=>void removeBuild(b.id)}><Trash2 size={14}/></button></div>
       </div>)}</div>
     </div></div>:null}
@@ -302,11 +302,11 @@ function Media(){
   async function load(){try{setItems((await json(await fetch("/api/admin/media",{cache:"no-store"}))).assets??[])}catch(e){setError(e instanceof Error?e.message:"load_failed")}}
   useEffect(()=>{void load()},[]);
   async function upload(e:FormEvent){e.preventDefault();if(!file)return;setBusy(true);try{const body=new FormData();body.append("file",file);await json(await fetch("/api/admin/v4/media/upload",{method:"POST",body}));setFile(null);await load()}catch(err){setError(err instanceof Error?err.message:"upload_failed")}finally{setBusy(false)}}
-  async function remove(key:string){if(!confirm("Media oвЂchirilsinmi?"))return;await json(await fetch(`/api/admin/media?key=${encodeURIComponent(key)}`,{method:"DELETE"}));await load()}
+  async function remove(key:string){if(!confirm("Media o'chirilsinmi?"))return;await json(await fetch(`/api/admin/media?key=${encodeURIComponent(key)}`,{method:"DELETE"}));await load()}
   return <Workspace eyebrow="R2 MEDIA" title="Media kutubxonasi" description="Cover, screenshot, banner va video fayllari.">
     <form className="ovMediaUpload" onSubmit={upload}><input type="file" accept="image/*,video/mp4,video/webm" onChange={e=>setFile(e.target.files?.[0]??null)}/><button className="button buttonPrimary" disabled={!file||busy}><Upload size={15}/> Yuklash</button></form>
     {error?<div className="ovError">{error}</div>:null}
-    <div className="ovMediaGrid">{items.map(a=><article key={a.key}>{a.contentType?.startsWith("image/")?<img src={a.url} alt=""/>:<div className="ovMediaPlaceholder"><FileArchive/></div>}<div><strong>{a.key.split("/").pop()}</strong><small>{bytes(a.size)} В· {formatDate(a.uploaded)}</small></div><button className="danger" onClick={()=>void remove(a.key)}><Trash2 size={14}/></button></article>)}</div>
+    <div className="ovMediaGrid">{items.map(a=><article key={a.key}>{a.contentType?.startsWith("image/")?<img src={a.url} alt=""/>:<div className="ovMediaPlaceholder"><FileArchive/></div>}<div><strong>{a.key.split("/").pop()}</strong><small>{bytes(a.size)} / {formatDate(a.uploaded)}</small></div><button className="danger" onClick={()=>void remove(a.key)}><Trash2 size={14}/></button></article>)}</div>
   </Workspace>;
 }
 
@@ -316,7 +316,7 @@ function EntityManager({entity,title,description}:{entity:string;title:string;de
   useEffect(()=>{void load()},[entity]);
   const cols=useMemo(()=>{const set=new Set<string>();rows.slice(0,15).forEach(r=>Object.keys(r).forEach(k=>set.add(k)));return [...set].slice(0,7)},[rows]);
   async function save(e:FormEvent){e.preventDefault();if(!selected)return;const changes:Record<string,any>={};editable.forEach(k=>changes[k]=selected[k]);try{await json(await fetch(`/api/admin/v4/entities/${entity}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:String(selected[pk]),changes})}));setSelected(null);await load()}catch(err){setError(err instanceof Error?err.message:"update_failed")}}
-  async function remove(row:AnyRow){const id=String(row[pk]??"");if(!id||!confirm("Bu yozuv oвЂchirilsinmi?"))return;try{await json(await fetch(`/api/admin/v4/entities/${entity}?id=${encodeURIComponent(id)}`,{method:"DELETE"}));await load()}catch(err){setError(err instanceof Error?err.message:"delete_failed")}}
+  async function remove(row:AnyRow){const id=String(row[pk]??"");if(!id||!confirm("Bu yozuv o'chirilsinmi?"))return;try{await json(await fetch(`/api/admin/v4/entities/${entity}?id=${encodeURIComponent(id)}`,{method:"DELETE"}));await load()}catch(err){setError(err instanceof Error?err.message:"delete_failed")}}
   return <Workspace eyebrow="DATABASE" title={title} description={description} actions={<button className="ovIconBtn" onClick={()=>void load()}><RefreshCw size={15}/></button>}>
     {error?<div className="ovError">{error}</div>:null}
     <div className="ovTableWrap"><table className="ovTable"><thead><tr>{cols.map(c=><th key={c}>{c}</th>)}{(editable.length||deletable)?<th/>:null}</tr></thead><tbody>
@@ -336,17 +336,17 @@ function ExperienceManager(){
   const defaultHome={
     overline:"SYSONE / DIGITAL PRODUCTS",
     titleLine1:"Yuklab oling.",
-    titleLine2:"Yoki shu yerning oвЂzida ishlating.",
-    description:"Dasturlar, web ilovalar, oвЂyinlar va AI vositalari. SysOne mahsulotlari bitta katalog, bitta akkaunt va bitta boshqaruv tizimida.",
+    titleLine2:"Yoki shu yerning o'zida ishlating.",
+    description:"Dasturlar, web ilovalar, o'yinlar va AI vositalari. SysOne mahsulotlari bitta katalog, bitta akkaunt va bitta boshqaruv tizimida.",
     primaryLabel:"Katalogni ochish",primaryHref:"/marketplace",
-    secondaryLabel:"OвЂyinlar",secondaryHref:"/games",
+    secondaryLabel:"O'yinlar",secondaryHref:"/games",
     showAnnouncementBar:true,announcementSpeed:34,showWebApps:true,showWebGames:true,showRuntimeBand:true,
   };
   const defaultDock=[
     {key:"home",label:"Home",href:"/",icon:"home",enabled:true},
-    {key:"store",label:"DoвЂkon",href:"/marketplace",icon:"store",enabled:true},
+    {key:"store",label:"Do'kon",href:"/marketplace",icon:"store",enabled:true},
     {key:"apps",label:"Dasturlar",href:"/products",icon:"apps",enabled:true},
-    {key:"games",label:"OвЂyinlar",href:"/games",icon:"games",enabled:true},
+    {key:"games",label:"O'yinlar",href:"/games",icon:"games",enabled:true},
     {key:"ai",label:"AI",href:"/ai",icon:"ai",enabled:true},
     {key:"account",label:"Hisob",href:"/account",icon:"account",enabled:true},
   ];
@@ -380,7 +380,7 @@ function ExperienceManager(){
   function removeDock(index:number){setDock(dock.filter((_,i)=>i!==index))}
   const icons=["home","store","apps","games","ai","account","support","web"];
 
-  return <Workspace eyebrow="PUBLIC EXPERIENCE" title="Bosh sahifa & Dock" description="Hero matnlari, public navigation va web runtime koвЂrinishini kodsiz boshqaring."
+  return <Workspace eyebrow="PUBLIC EXPERIENCE" title="Bosh sahifa & Dock" description="Hero matnlari, public navigation va web runtime ko'rinishini kodsiz boshqaring."
     actions={<button className="ovIconBtn" onClick={()=>void load()}><RefreshCw size={15}/></button>}>
     {error?<div className="ovError">{error}</div>:null}
     {saved?<div className="ovSuccess">Saqlandi. Public sahifa keyingi ochilishda yangi sozlamalarni oladi.</div>:null}
@@ -389,15 +389,15 @@ function ExperienceManager(){
         <div className="ovPanelHead"><strong>Homepage hero</strong><small>sysone.top</small></div>
         <div className="ovForm ovExperienceFields">
           <label className="wide"><span>Eyebrow</span><input value={home.overline} onChange={e=>setHome({...home,overline:e.target.value})}/></label>
-          <label className="wide"><span>Sarlavha В· 1-qator</span><input value={home.titleLine1} onChange={e=>setHome({...home,titleLine1:e.target.value})}/></label>
-          <label className="wide"><span>Sarlavha В· 2-qator</span><input value={home.titleLine2} onChange={e=>setHome({...home,titleLine2:e.target.value})}/></label>
+          <label className="wide"><span>Sarlavha / 1-qator</span><input value={home.titleLine1} onChange={e=>setHome({...home,titleLine1:e.target.value})}/></label>
+          <label className="wide"><span>Sarlavha / 2-qator</span><input value={home.titleLine2} onChange={e=>setHome({...home,titleLine2:e.target.value})}/></label>
           <label className="wide"><span>Tavsif</span><textarea rows={4} value={home.description} onChange={e=>setHome({...home,description:e.target.value})}/></label>
           <label><span>Asosiy tugma</span><input value={home.primaryLabel} onChange={e=>setHome({...home,primaryLabel:e.target.value})}/></label>
           <label><span>Asosiy link</span><input value={home.primaryHref} onChange={e=>setHome({...home,primaryHref:e.target.value})}/></label>
           <label><span>Ikkinchi tugma</span><input value={home.secondaryLabel} onChange={e=>setHome({...home,secondaryLabel:e.target.value})}/></label>
           <label><span>Ikkinchi link</span><input value={home.secondaryHref} onChange={e=>setHome({...home,secondaryHref:e.target.value})}/></label>
           <label><span>Announcement tezligi (sek)</span><input type="number" min={10} max={120} value={home.announcementSpeed} onChange={e=>setHome({...home,announcementSpeed:Number(e.target.value)})}/></label>
-          <label className="ovCheck"><input type="checkbox" checked={home.showAnnouncementBar} onChange={e=>setHome({...home,showAnnouncementBar:e.target.checked})}/><span>EвЂ™lon lentasi</span></label>
+          <label className="ovCheck"><input type="checkbox" checked={home.showAnnouncementBar} onChange={e=>setHome({...home,showAnnouncementBar:e.target.checked})}/><span>E'lon lentasi</span></label>
           <label className="ovCheck"><input type="checkbox" checked={home.showRuntimeBand} onChange={e=>setHome({...home,showRuntimeBand:e.target.checked})}/><span>Web Runtime bloki</span></label>
           <label className="ovCheck"><input type="checkbox" checked={home.showWebApps} onChange={e=>setHome({...home,showWebApps:e.target.checked})}/><span>Web Apps shelf</span></label>
           <label className="ovCheck"><input type="checkbox" checked={home.showWebGames} onChange={e=>setHome({...home,showWebGames:e.target.checked})}/><span>Web Games shelf</span></label>
@@ -409,13 +409,13 @@ function ExperienceManager(){
         <div className="ovDockEditor">
           {dock.map((item:any,i:number)=><div className="ovDockConfigRow" key={item.key??i}>
             <div className="ovDockOrder">
-              <button type="button" disabled={i===0} onClick={()=>move(i,-1)}>в†‘</button>
-              <button type="button" disabled={i===dock.length-1} onClick={()=>move(i,1)}>в†“</button>
+              <button type="button" disabled={i===0} onClick={()=>move(i,-1)}>^</button>
+              <button type="button" disabled={i===dock.length-1} onClick={()=>move(i,1)}>v</button>
             </div>
             <label><span>Nomi</span><input value={item.label??""} onChange={e=>updateDock(i,{label:e.target.value})}/></label>
             <label><span>Link</span><input value={item.href??""} onChange={e=>updateDock(i,{href:e.target.value})}/></label>
             <label><span>Icon</span><select value={item.icon??"apps"} onChange={e=>updateDock(i,{icon:e.target.value})}>{icons.map(x=><option key={x}>{x}</option>)}</select></label>
-            <label className="ovCheck"><input type="checkbox" checked={item.enabled!==false} onChange={e=>updateDock(i,{enabled:e.target.checked})}/><span>KoвЂrinsin</span></label>
+            <label className="ovCheck"><input type="checkbox" checked={item.enabled!==false} onChange={e=>updateDock(i,{enabled:e.target.checked})}/><span>Ko'rinsin</span></label>
             <button type="button" className="danger ovDockRemove" onClick={()=>removeDock(i)}><Trash2 size={14}/></button>
           </div>)}
         </div>
@@ -456,9 +456,9 @@ export function OwnerToolV4(){
     if(active==="settings")return <SettingsManager/>;
     const mapping:Record<string,[string,string]>={
       users:["Users","SysOne ID foydalanuvchilari, rollar va locale."],
-      sessions:["Sessions","Faol login sessionlari; kerak boвЂlsa sessionni revoke qiling."],
+      sessions:["Sessions","Faol login sessionlari; kerak bo'lsa sessionni revoke qiling."],
       notifications:["Notifications","Foydalanuvchi bildirishnomalari va read holati."],
-      organizations:["Organizations","Tashkilotlar va owner bogвЂlanishi."],
+      organizations:["Organizations","Tashkilotlar va owner bog'lanishi."],
       orders:["Buyurtmalar","Order status va payment metadata."],
       entitlements:["Entitlements","Mahsulotga egalik huquqlari."],
       licenses:["Litsenziyalar","License holati, device limit va expiry."],

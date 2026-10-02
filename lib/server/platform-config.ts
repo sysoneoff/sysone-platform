@@ -1,4 +1,4 @@
-﻿import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
+import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
 
 export type HomeUiConfig = {
   overline: string;
@@ -27,12 +27,12 @@ export type DockUiItem = {
 export const DEFAULT_HOME: HomeUiConfig = {
   overline: "SYSONE / DIGITAL PRODUCTS",
   titleLine1: "Yuklab oling.",
-  titleLine2: "Yoki shu yerning oвЂzida ishlating.",
+  titleLine2: "Yoki shu yerning o'zida ishlating.",
   description:
-    "Dasturlar, web ilovalar, oвЂyinlar va AI vositalari. SysOne mahsulotlari bitta katalog, bitta akkaunt va bitta boshqaruv tizimida.",
+    "Dasturlar, web ilovalar, o'yinlar va AI vositalari. SysOne mahsulotlari bitta katalog, bitta akkaunt va bitta boshqaruv tizimida.",
   primaryLabel: "Katalogni ochish",
   primaryHref: "/marketplace",
-  secondaryLabel: "OвЂyinlar",
+  secondaryLabel: "O'yinlar",
   secondaryHref: "/games",
   showAnnouncementBar: true,
   announcementSpeed: 34,
@@ -43,9 +43,9 @@ export const DEFAULT_HOME: HomeUiConfig = {
 
 export const DEFAULT_DOCK: DockUiItem[] = [
   { key: "home", label: "Home", href: "/", icon: "home", enabled: true },
-  { key: "store", label: "DoвЂkon", href: "/marketplace", icon: "store", enabled: true },
+  { key: "store", label: "Do'kon", href: "/marketplace", icon: "store", enabled: true },
   { key: "apps", label: "Dasturlar", href: "/products", icon: "apps", enabled: true },
-  { key: "games", label: "OвЂyinlar", href: "/games", icon: "games", enabled: true },
+  { key: "games", label: "O'yinlar", href: "/games", icon: "games", enabled: true },
   { key: "ai", label: "AI", href: "/ai", icon: "ai", enabled: true },
   { key: "account", label: "Hisob", href: "/account", icon: "account", enabled: true },
 ];
@@ -102,23 +102,23 @@ function normalizeHome(raw: unknown): HomeUiConfig {
 function normalizeDock(raw: unknown): DockUiItem[] {
   const r = object(raw);
   if (!Array.isArray(r.items)) return DEFAULT_DOCK;
+
   const allowedIcons = new Set([
-    "home",
-    "store",
-    "apps",
-    "games",
-    "ai",
-    "account",
-    "support",
-    "web",
+    "home", "store", "apps", "games", "ai", "account", "support", "web",
   ]);
+
   const items = r.items
     .slice(0, 8)
     .map((item, index) => {
       const x = object(item);
       const href = localHref(x.href, "");
       if (!href) return null;
-      const icon = typeof x.icon === "string" && allowedIcons.has(x.icon) ? x.icon : "apps";
+
+      const icon =
+        typeof x.icon === "string" && allowedIcons.has(x.icon)
+          ? x.icon
+          : "apps";
+
       return {
         key:
           typeof x.key === "string" && /^[a-z0-9_-]{1,40}$/i.test(x.key)
@@ -142,12 +142,11 @@ export async function getPublicUiConfig() {
       .all<{ key: string; value_json: string }>();
 
     const map = new Map<string, unknown>();
+
     for (const row of result.results ?? []) {
       try {
         map.set(row.key, JSON.parse(row.value_json));
-      } catch {
-        // Ignore malformed owner setting and fall back to safe defaults.
-      }
+      } catch {}
     }
 
     return {

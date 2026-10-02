@@ -444,3 +444,458 @@ html[data-theme="light"] .v41DockItem.active{color:#111418;background:rgba(0,0,0
   .v41DockLabel{font-size:7.5px;max-width:46px}
   .v41RuntimeStats{flex-direction:column}
 }
+
+/* =========================================================
+   SYSONE V4.2 - VISUAL HIERARCHY / MOTION / COMPACT TYPE
+   ========================================================= */
+
+:root{
+  --v42-panel:#0d0f12;
+  --v42-panel-soft:rgba(255,255,255,.022);
+  --v42-panel-hover:rgba(255,255,255,.038);
+  --v42-border:rgba(255,255,255,.095);
+  --v42-border-strong:rgba(255,255,255,.145);
+  --v42-radius:20px;
+}
+
+/* Route motion */
+.v42PageTransition{
+  min-height:inherit;
+  animation:v42PageIn .32s cubic-bezier(.2,.75,.25,1) both;
+  transform-origin:50% 0;
+}
+@keyframes v42PageIn{
+  from{opacity:0;transform:translateY(8px);filter:blur(2px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+
+/* Loading state */
+.v42LoadingPage{
+  min-height:calc(100dvh - 66px);
+  padding:42px 0 120px;
+}
+.v42LoadingPanel{
+  min-height:430px;
+  padding:34px;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.008));
+  overflow:hidden;
+}
+.v42LoadingTop{display:flex;align-items:center;gap:12px;margin-bottom:42px}
+.v42LoadingIcon,.v42LoadingLine,.v42LoadingActions span{
+  display:block;
+  background:linear-gradient(90deg,rgba(255,255,255,.035),rgba(255,255,255,.085),rgba(255,255,255,.035));
+  background-size:220% 100%;
+  animation:v42Shimmer 1.25s linear infinite;
+}
+.v42LoadingIcon{width:42px;height:42px;border-radius:12px}
+.v42LoadingLine{height:12px;border-radius:999px;margin-bottom:12px}
+.v42LoadingLine.short{width:120px;margin:0}
+.v42LoadingLine.title{width:min(610px,78%);height:48px;border-radius:12px}
+.v42LoadingLine.title.second{width:min(470px,62%)}
+.v42LoadingLine.text{width:min(670px,88%);height:13px;margin-top:27px}
+.v42LoadingLine.text.narrow{width:min(510px,67%);margin-top:0}
+.v42LoadingActions{display:flex;gap:9px;margin-top:31px}
+.v42LoadingActions span{width:128px;height:44px;border-radius:11px}
+@keyframes v42Shimmer{to{background-position:-220% 0}}
+
+/* Header */
+.v41Header{
+  height:62px;
+  background:rgba(8,9,11,.82);
+  border-bottom-color:rgba(255,255,255,.065);
+}
+.v41Header .v4HeaderInner{height:62px}
+.v41HeaderStatus{font-size:8.5px;color:#626b77}
+.v41HeaderStatus .v41LiveDot{width:5px;height:5px}
+
+/* Desktop dock refinement */
+.v41Dock{
+  gap:5px;
+  padding:7px 8px;
+  border-radius:22px;
+  background:rgba(15,17,21,.82);
+  border-color:rgba(255,255,255,.13);
+  box-shadow:0 18px 50px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.v41DockItem{
+  min-width:72px;
+  height:58px;
+  border-radius:14px;
+}
+.v41DockIcon{
+  width:31px;height:28px;
+  border-radius:9px;
+  transition:background .18s ease,transform .18s ease;
+}
+.v41DockItem:hover .v41DockIcon,
+.v41DockItem.active .v41DockIcon{
+  background:rgba(255,255,255,.06);
+}
+.v41DockItem:hover .v41DockIcon{transform:translateY(-1px)}
+.v41DockLabel{font-size:8.5px;color:inherit}
+
+/* Home surfaces */
+.v4Home{
+  padding-top:22px;
+  background:transparent;
+}
+.v4Hero{
+  padding:0 0 18px;
+  border:0;
+}
+.v4HeroLayout{
+  grid-template-columns:minmax(0,1fr) minmax(350px,.72fr);
+  gap:42px;
+  padding:34px;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:
+    radial-gradient(circle at 15% 0%,rgba(85,125,210,.055),transparent 28%),
+    rgba(255,255,255,.014);
+}
+.v4HeroCopy h1{
+  max-width:760px;
+  margin:14px 0 18px;
+  font-size:clamp(40px,5vw,68px);
+  line-height:.96;
+  letter-spacing:-.052em;
+  font-weight:690;
+}
+.v4HeroCopy>p{
+  max-width:640px;
+  font-size:13px;
+  line-height:1.7;
+}
+.v4HeroActions{margin-top:24px}
+.v4HeroMeta{margin-top:21px;gap:14px}
+.v4FeaturePanel{
+  border-radius:16px;
+  background:#101216;
+}
+.v4EmptyFeature{min-height:240px;padding:32px 24px}
+.v4EmptyFeature strong{font-size:20px}
+
+.v4ModeStrip{
+  padding:0 0 18px;
+  border:0;
+  background:transparent;
+}
+.v4ModeStrip .shell{
+  overflow:hidden;
+  border:1px solid var(--v42-border);
+  border-radius:16px;
+  background:rgba(255,255,255,.012);
+}
+.v4ModeStrip a{min-height:78px}
+.v4ModeStrip a:first-child{border-left:0}
+.v4ModeStrip a:last-child{border-right:0}
+
+.v41RuntimeBand{
+  padding:0 0 18px;
+  border:0;
+  background:transparent;
+}
+.v41RuntimeBandInner{
+  min-height:0;
+  padding:28px 30px;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:
+    linear-gradient(135deg,rgba(78,116,196,.045),rgba(255,255,255,.012));
+}
+.v41RuntimeBand h2{
+  font-size:clamp(27px,3vw,40px);
+  letter-spacing:-.045em;
+}
+.v41RuntimeBand p{font-size:11px}
+
+.v4Shelf,
+.v4ShelfAlt{
+  padding:0 0 18px;
+  border:0;
+  background:transparent;
+}
+.v4Shelf>.shell{
+  padding:30px;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:rgba(255,255,255,.014);
+}
+.v4ShelfAlt>.shell{background:rgba(255,255,255,.021)}
+.v4SectionHeader{margin-bottom:22px}
+.v4SectionHeader h2{
+  font-size:clamp(29px,3.2vw,43px);
+  letter-spacing:-.046em;
+}
+.v4SectionHeader p{font-size:11px}
+
+.v4Closing{
+  padding:0 0 30px;
+  border:0;
+}
+.v4ClosingInner{
+  padding:30px;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:rgba(255,255,255,.014);
+}
+.v4Closing h2{
+  font-size:clamp(29px,3.2vw,43px);
+  letter-spacing:-.046em;
+}
+
+/* Catalog / software / games / general */
+.pageWrap{
+  padding-top:22px;
+}
+.v3PageHero,
+.pageHero{
+  padding:0 0 18px!important;
+  border:0!important;
+}
+.v3PageHero>.shell,
+.pageHero.shell{
+  padding:32px 34px!important;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:
+    radial-gradient(circle at 8% 0%,rgba(74,116,204,.05),transparent 28%),
+    rgba(255,255,255,.013);
+}
+.v3PageHeroLayout{
+  grid-template-columns:minmax(0,1fr) minmax(170px,.28fr);
+  gap:34px;
+}
+.v3HeroIcon{
+  width:44px;height:44px;margin-bottom:18px;
+}
+.v3HeroIcon svg{width:20px;height:20px}
+.v3PageHero h1,
+.pageHero h1{
+  max-width:850px!important;
+  margin:10px 0 13px!important;
+  font-size:clamp(38px,4.7vw,68px)!important;
+  line-height:.98!important;
+  letter-spacing:-.052em!important;
+  font-weight:610!important;
+}
+.v3PageHero p,
+.pageHero>p{
+  max-width:700px!important;
+  font-size:12px!important;
+  line-height:1.65!important;
+}
+.v3HeroCount{
+  min-width:160px;
+  padding:13px 0 4px 20px;
+}
+.v3HeroCount strong{font-size:clamp(38px,4vw,58px)}
+.v3HeroCount span{font-size:8px}
+
+.v3CatalogPageBody{
+  padding:0 0 34px;
+}
+.v3CatalogPageBody>.shell{
+  padding:28px;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:rgba(255,255,255,.013);
+}
+.v3CatalogTitleRow{
+  margin-bottom:22px;
+  padding-bottom:17px;
+}
+.v3CatalogTitleRow h2{
+  font-size:clamp(23px,2.2vw,31px);
+}
+.v3EmptyState{
+  min-height:235px;
+  padding:30px;
+  border-style:solid;
+  background:rgba(255,255,255,.012);
+}
+.v3EmptyState h2{
+  font-size:clamp(25px,2.8vw,38px)!important;
+}
+.v3EmptyState p{font-size:11px!important}
+
+/* Generic sections */
+.section{
+  padding:0 0 18px!important;
+  border:0!important;
+  background:transparent!important;
+}
+.section>.shell{
+  padding:28px!important;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:rgba(255,255,255,.013);
+}
+.sectionTint{
+  border:0!important;
+  background:transparent!important;
+}
+.sectionTint>.shell{background:rgba(255,255,255,.02)}
+.sectionMiniHead{margin-bottom:22px!important}
+.sectionMiniHead h2{
+  font-size:clamp(25px,2.6vw,37px)!important;
+}
+.sectionMiniHead p{font-size:11px!important}
+
+/* Product / game details */
+.productDetailHero,
+.gameDetailHero{
+  padding:22px 0 18px!important;
+  border:0!important;
+}
+.productDetailHero>.shell,
+.gameDetailHero>.shell{
+  padding:30px!important;
+  border:1px solid var(--v42-border);
+  border-radius:var(--v42-radius);
+  background:rgba(255,255,255,.013);
+}
+.productDetailGrid,
+.gameDetailGrid{
+  grid-template-columns:minmax(0,.86fr) minmax(390px,1.14fr)!important;
+  gap:38px!important;
+}
+.productDetailGrid h1,
+.gameDetailGrid h1{
+  margin:15px 0 17px!important;
+  font-size:clamp(39px,4.8vw,68px)!important;
+  line-height:.98!important;
+  letter-spacing:-.052em!important;
+  font-weight:610!important;
+}
+.productDetailGrid>div:first-child>p,
+.gameDetailGrid>div:first-child>p{
+  font-size:12px!important;
+  line-height:1.65!important;
+}
+.productDetailArt,
+.cinematicFrame{
+  min-height:360px!important;
+}
+.productDetailArt img,
+.cinematicFrame img{min-height:360px}
+
+/* Logged-out account */
+.authWrap{
+  min-height:calc(100dvh - 160px)!important;
+  padding:34px 20px 110px!important;
+}
+.authCard{
+  max-width:560px!important;
+  padding:36px!important;
+  border-radius:18px!important;
+  background:rgba(255,255,255,.018)!important;
+}
+.authCard h1{
+  max-width:470px!important;
+  font-size:clamp(31px,3.5vw,46px)!important;
+  line-height:1.02!important;
+  letter-spacing:-.046em!important;
+}
+.authCard p{font-size:12px!important;line-height:1.65!important}
+
+/* Other legacy headings */
+.aboutStatement h2,
+.v3Closing h2,
+.v3SpotlightCopy h2{
+  font-size:clamp(31px,3.8vw,52px)!important;
+}
+
+/* Cards */
+.v3ProductCard,
+.v3GameCard,
+.surface{
+  border-color:var(--v42-border)!important;
+}
+.v3ProductCard,
+.v3GameCard{
+  background:#101216!important;
+}
+.v3ProductCard:hover,
+.v3GameCard:hover{
+  background:#14171c!important;
+  border-color:var(--v42-border-strong)!important;
+}
+
+@media(max-width:1040px){
+  .v4HeroLayout{grid-template-columns:1fr;padding:28px}
+  .v4FeaturePanel{max-width:none}
+  .productDetailGrid,
+  .gameDetailGrid{grid-template-columns:1fr!important}
+}
+
+@media(max-width:760px){
+  .v4Home,.pageWrap{padding-top:12px}
+
+  .v4HeroLayout,
+  .v3PageHero>.shell,
+  .pageHero.shell,
+  .v4Shelf>.shell,
+  .v41RuntimeBandInner,
+  .v4ClosingInner,
+  .v3CatalogPageBody>.shell,
+  .section>.shell,
+  .productDetailHero>.shell,
+  .gameDetailHero>.shell{
+    padding:20px!important;
+    border-radius:16px;
+  }
+
+  .v4HeroCopy h1{
+    font-size:clamp(37px,10.6vw,52px);
+    line-height:.98;
+  }
+
+  .v3PageHero h1,
+  .pageHero h1{
+    font-size:clamp(34px,9vw,50px)!important;
+  }
+
+  .v3PageHeroLayout{grid-template-columns:1fr;gap:22px}
+
+  .v3HeroCount{
+    justify-self:stretch;
+    border-left:0;
+    border-top:1px solid var(--v42-border);
+    padding:17px 0 0;
+  }
+
+  .v3HeroCount strong{font-size:39px}
+  .v41RuntimeBandInner{gap:18px}
+  .v4SectionHeader h2,
+  .v4Closing h2{font-size:30px}
+
+  .v42LoadingPage{padding-top:16px}
+  .v42LoadingPanel{min-height:360px;padding:22px;border-radius:16px}
+  .v42LoadingLine.title{height:34px}
+}
+
+@media(max-width:560px){
+  .v4Hero{padding-bottom:12px}
+  .v4ModeStrip,
+  .v41RuntimeBand,
+  .v4Shelf,
+  .v4Closing{padding-bottom:12px}
+
+  .v4HeroCopy>p{font-size:12px}
+  .v4ModeStrip a{min-height:68px}
+  .v41RuntimeStats{gap:7px}
+  .v41DockItem{height:54px}
+  .v41DockLabel{font-size:7.5px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v42PageTransition,
+  .v42LoadingIcon,
+  .v42LoadingLine,
+  .v42LoadingActions span{
+    animation:none!important;
+  }
+}
