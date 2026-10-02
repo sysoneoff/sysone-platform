@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -7,7 +7,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import { ProductPurchaseButton } from "@/components/ProductPurchaseButton";
+import { ProductActionPanel } from "@/components/ProductActionPanel";
 
 import {
   getPublishedProductBySlug,
@@ -211,26 +211,7 @@ export default async function ProductPage({
               </div>
             )}
 
-            <div className="heroActions">
-              {product.pricingModel.toUpperCase() === "ONE_TIME" &&
-              product.currentPriceMinor > 0 ? (
-                <ProductPurchaseButton
-                  productSlug={product.slug}
-                  priceLabel={formatPrice(product)}
-                />
-              ) : (
-                <span className="button buttonPrimary buttonLarge">
-                  {formatPrice(product)}
-                </span>
-              )}
-
-              <Link
-                className="button buttonGhost buttonLarge"
-                href="/marketplace"
-              >
-                View Store
-              </Link>
-            </div>
+            <ProductActionPanel product={product}/>
           </div>
 
           <div className="surface productDetailArt">

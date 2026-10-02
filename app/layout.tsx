@@ -1,10 +1,11 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
 import "./obsidian.css";
 import "./v4.css";
 
 import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { AppDock } from "@/components/AppDock";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { I18nProvider } from "@/components/I18nProvider";
@@ -14,8 +15,8 @@ const SITE_URL=process.env.NEXT_PUBLIC_SITE_URL||"https://sysone.top";
 
 export const metadata:Metadata={
   metadataBase:new URL(SITE_URL),
-  title:{default:"SysOne — Software, Web Apps & Games",template:"%s — SysOne"},
-  description:"Dasturlar, web ilovalar, o‘yinlar, AI vositalari va raqamli mahsulotlar — bitta SysOne platformasida.",
+  title:{default:"SysOne вЂ” Software, Web Apps & Games",template:"%s вЂ” SysOne"},
+  description:"Dasturlar, web ilovalar, oвЂyinlar, AI vositalari va raqamli mahsulotlar вЂ” bitta SysOne platformasida.",
   applicationName:"SysOne",
   keywords:["SysOne","software","web apps","games","AI","digital products","Uzbekistan"],
   openGraph:{type:"website",siteName:"SysOne",title:"SysOne",description:"Software, Web Apps, Games & Digital Products",images:["/brand/sysone-primary.png"]},
@@ -33,6 +34,7 @@ export default function RootLayout({children}:{children:React.ReactNode}){
         <Header/>
         <main>{children}</main>
         <Footer/>
+        <AppDock/>
       </I18nProvider>
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify({
         "@context":"https://schema.org","@graph":[
@@ -44,3 +46,4 @@ export default function RootLayout({children}:{children:React.ReactNode}){
     </body>
   </html>;
 }
+

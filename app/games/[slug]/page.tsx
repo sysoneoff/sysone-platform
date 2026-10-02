@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   Gamepad2,
 } from "lucide-react";
+
+import { ProductActionPanel } from "@/components/ProductActionPanel";
 
 import {
   getPublishedProductBySlug,
@@ -190,18 +192,7 @@ export default async function GamePage({
               </div>
             )}
 
-            <div className="heroActions">
-              <span className="button buttonPrimary buttonLarge">
-                {formatPrice(game)}
-              </span>
-
-              <Link
-                className="button buttonGhost buttonLarge"
-                href="/marketplace"
-              >
-                View Store
-              </Link>
-            </div>
+            <ProductActionPanel product={game}/>
           </div>
 
           <div className="surface cinematicFrame">
@@ -387,3 +378,4 @@ export default async function GamePage({
     </div>
   );
 }
+

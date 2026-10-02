@@ -1,21 +1,23 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Globe2, MonitorDown, Play, Sparkles } from "lucide-react";
+import { ArrowRight, Gamepad2, Globe2, MonitorDown, Sparkles } from "lucide-react";
 
 import { ProductCard } from "@/components/ProductCard";
+import { getPublicUiConfig } from "@/lib/server/platform-config";
 import { listPublishedProducts, type PublicProduct } from "@/lib/server/products";
 
 export const dynamic="force-dynamic";
 export const metadata:Metadata={
-  title:{absolute:"SysOne — Dasturlar, web ilovalar va o‘yinlar"},
-  description:"SysOne dasturlari, web ilovalari, o‘yinlari va raqamli mahsulotlari — bitta platformada.",
+  title:{absolute:"SysOne вЂ” Dasturlar, web ilovalar va oвЂyinlar"},
+  description:"SysOne dasturlari, web ilovalari, oвЂyinlari va raqamli mahsulotlari вЂ” bitta platformada.",
 };
 
 function newest(items:PublicProduct[]){return [...items].sort((a,b)=>+new Date(b.updatedAt)-+new Date(a.updatedAt));}
 function description(p:PublicProduct){return p.shortDescription??p.tagline??p.description??"";}
 
 export default async function HomePage(){
-  const products=await listPublishedProducts();
+  const [products,ui]=await Promise.all([listPublishedProducts(),getPublicUiConfig()]);
+  const home=ui.home;
   const featured=products.filter(p=>p.featured||p.featuredRank>0).sort((a,b)=>b.featuredRank-a.featuredRank);
   const hero=featured[0]??newest(products)[0]??null;
   const webApps=products.filter(p=>p.kind!=="GAME"&&p.runtime&&["WEB","HYBRID"].includes(p.runtime.deliveryMode));
@@ -26,18 +28,15 @@ export default async function HomePage(){
     <section className="v4Hero">
       <div className="shell v4HeroLayout">
         <div className="v4HeroCopy">
-          <span className="v4Overline">SYSONE / DIGITAL PRODUCTS</span>
-          <h1>Yuklab oling.<br/><span>Yoki shu yerning o‘zida ishlating.</span></h1>
-          <p>
-            Dasturlar, web ilovalar, o‘yinlar va AI vositalari. SysOne mahsulotlari
-            bitta katalog, bitta akkaunt va bitta boshqaruv tizimida.
-          </p>
+          <span className="v4Overline">{home.overline}</span>
+          <h1>{home.titleLine1}<br/><span>{home.titleLine2}</span></h1>
+          <p>{home.description}</p>
           <div className="v4HeroActions">
-            <Link href="/marketplace" className="button buttonPrimary buttonLarge">Katalogni ochish <ArrowRight size={16}/></Link>
-            <Link href="/games" className="button buttonGhost buttonLarge">O‘yinlar</Link>
+            <Link href={home.primaryHref} className="button buttonPrimary buttonLarge">{home.primaryLabel} <ArrowRight size={16}/></Link>
+            <Link href={home.secondaryHref} className="button buttonGhost buttonLarge">{home.secondaryLabel}</Link>
           </div>
           <div className="v4HeroMeta">
-            <span><Globe2 size={14}/> Web’da ishlaydi</span>
+            <span><Globe2 size={14}/> WebвЂ™da ishlaydi</span>
             <span><MonitorDown size={14}/> Yuklab olinadigan buildlar</span>
             <span><Sparkles size={14}/> SysOne ID bilan birlashgan</span>
           </div>
@@ -45,7 +44,7 @@ export default async function HomePage(){
 
         <aside className="v4FeaturePanel">
           <div className="v4PanelHead">
-            <span>HOZIR SYSONE’DA</span>
+            <span>HOZIR SYSONEвЂ™DA</span>
             <small>{products.length} mahsulot</small>
           </div>
           {hero?<Link href={hero.kind==="GAME"?`/games/${hero.slug}`:`/products/${hero.slug}`} className="v4FeaturedProduct">
@@ -53,14 +52,14 @@ export default async function HomePage(){
               {hero.media[0]?<img src={`/api/media/${hero.media[0].key.split("/").map(encodeURIComponent).join("/")}`} alt={hero.media[0].alt??hero.name}/>:<span>{hero.name.slice(0,1)}</span>}
             </div>
             <div className="v4FeaturedBody">
-              <small>{hero.kind==="GAME"?"O‘YIN":"MAHSULOT"} · {hero.category??"SysOne"}</small>
+              <small>{hero.kind==="GAME"?"OвЂYIN":"MAHSULOT"} В· {hero.category??"SysOne"}</small>
               <h2>{hero.name}</h2>
               {description(hero)?<p>{description(hero)}</p>:null}
-              <span className="v4InlineAction">{hero.runtime?.deliveryMode==="WEB"?(hero.kind==="GAME"?"O‘ynash":"Ishga tushirish"):"Batafsil"} <ArrowRight size={14}/></span>
+              <span className="v4InlineAction">{hero.runtime?.deliveryMode==="WEB"?(hero.kind==="GAME"?"OвЂynash":"Ishga tushirish"):"Batafsil"} <ArrowRight size={14}/></span>
             </div>
           </Link>:<div className="v4EmptyFeature">
             <strong>Katalog nashrga tayyor.</strong>
-            <p>Owner Tool’dan birinchi mahsulot yoki o‘yinni nashr qiling.</p>
+            <p>Owner ToolвЂ™dan birinchi mahsulot yoki oвЂyinni nashr qiling.</p>
           </div>}
         </aside>
       </div>
@@ -68,14 +67,28 @@ export default async function HomePage(){
 
     <section className="v4ModeStrip">
       <div className="shell">
-        <Link href="/products"><strong>Software</strong><span>Windows · Android · Web</span></Link>
-        <Link href="/games"><strong>Games</strong><span>Web · PC · Mobile</span></Link>
-        <Link href="/ai"><strong>AI</strong><span>Tools · assistants</span></Link>
+        <Link href="/products"><strong>Software</strong><span>Windows В· Android В· Web</span></Link>
+        <Link href="/games"><strong>Games</strong><span>Web В· PC В· Mobile</span></Link>
+        <Link href="/ai"><strong>AI</strong><span>Tools В· assistants</span></Link>
         <Link href="/contact"><strong>Custom</strong><span>Buyurtma asosida tizimlar</span></Link>
       </div>
     </section>
 
-    {webApps.length?<section className="v4Shelf">
+    {home.showRuntimeBand?<section className="v41RuntimeBand">
+      <div className="shell v41RuntimeBandInner">
+        <div>
+          <span className="v4Overline">SYSONE WEB RUNTIME</span>
+          <h2>OвЂrnating yoki darhol ishga tushiring.</h2>
+          <p>Web dastur va oвЂyinlar `runtime.sysone.top` orqali SysOne ichida ishlaydi. Download mahsulotlar esa odatdagi release oqimida qoladi.</p>
+        </div>
+        <div className="v41RuntimeStats">
+          <Link href="/products"><Globe2 size={17}/><span><strong>{webApps.length}</strong><small>Web dastur</small></span></Link>
+          <Link href="/games"><Gamepad2 size={17}/><span><strong>{webGames.length}</strong><small>Web oвЂyin</small></span></Link>
+        </div>
+      </div>
+    </section>:null}
+
+    {home.showWebApps&&webApps.length?<section className="v4Shelf">
       <div className="shell">
         <header className="v4SectionHeader">
           <div><span className="v4Overline">WEB APPS</span><h2>Yuklamasdan ishlating.</h2><p>Brauzerda bir zumda ochiladigan SysOne ilovalari.</p></div>
@@ -85,11 +98,11 @@ export default async function HomePage(){
       </div>
     </section>:null}
 
-    {webGames.length?<section className="v4Shelf v4ShelfAlt">
+    {home.showWebGames&&webGames.length?<section className="v4Shelf v4ShelfAlt">
       <div className="shell">
         <header className="v4SectionHeader">
-          <div><span className="v4Overline">WEB GAMES</span><h2>Bosing va o‘ynang.</h2><p>O‘rnatishsiz, SysOne platformasidan chiqmasdan.</p></div>
-          <Link href="/games">O‘yinlar <ArrowRight size={15}/></Link>
+          <div><span className="v4Overline">WEB GAMES</span><h2>Bosing va oвЂynang.</h2><p>OвЂrnatishsiz, SysOne platformasidan chiqmasdan.</p></div>
+          <Link href="/games">OвЂyinlar <ArrowRight size={15}/></Link>
         </header>
         <div className="v4ProductGrid">{webGames.slice(0,6).map(p=><ProductCard key={p.id} product={p}/>)}</div>
       </div>
@@ -98,7 +111,7 @@ export default async function HomePage(){
     {latest.length?<section className="v4Shelf">
       <div className="shell">
         <header className="v4SectionHeader">
-          <div><span className="v4Overline">YANGI VA YANGILANGAN</span><h2>So‘nggi relizlar.</h2></div>
+          <div><span className="v4Overline">YANGI VA YANGILANGAN</span><h2>SoвЂnggi relizlar.</h2></div>
           <Link href="/marketplace">Katalog <ArrowRight size={15}/></Link>
         </header>
         <div className="v4ProductGrid">{latest.map(p=><ProductCard key={p.id} product={p}/>)}</div>
