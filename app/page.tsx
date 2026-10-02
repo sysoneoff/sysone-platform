@@ -8,8 +8,8 @@ import { listPublishedProducts, type PublicProduct } from "@/lib/server/products
 
 export const dynamic="force-dynamic";
 export const metadata:Metadata={
-  title:{absolute:"SysOne вЂ” Dasturlar, web ilovalar va o'yinlar"},
-  description:"SysOne dasturlari, web ilovalari, o'yinlari va raqamli mahsulotlari вЂ” bitta platformada.",
+  title:{absolute:"SysOne - Dasturlar, web ilovalar va o'yinlar"},
+  description:"SysOne dasturlari, web ilovalari, o'yinlari va raqamli mahsulotlari - bitta platformada.",
 };
 
 function newest(items:PublicProduct[]){return [...items].sort((a,b)=>+new Date(b.updatedAt)-+new Date(a.updatedAt));}

@@ -17,9 +17,9 @@ export function Header(){
 
   return <header className="v4Header v41Header">
     <div className="shell v4HeaderInner v41HeaderInner">
-      <Link href="/" className="v4HeaderBrand" aria-label="SysOne home">
+      <div className="v4HeaderBrand">
         <Logo/>
-      </Link>
+      </div>
 
       <div className="v41HeaderStatus">
         <span className="v41LiveDot"/>
