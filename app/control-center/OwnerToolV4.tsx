@@ -16,6 +16,8 @@ import { Workspace, json, bytes, formatDate } from "./owner-v4/shared";
 import { NAV } from "./owner-v4/navigation";
 import { Overview } from "./owner-v4/Overview";
 import { EntityManager } from "./owner-v4/EntityManager";
+import { OrdersManager } from "./owner-v4/OrdersManager";
+import { CustomersManager } from "./owner-v4/CustomersManager";
 
 type Product={
   id:string;slug:string;name:string;kind:string;category:string|null;description:string|null;
@@ -357,6 +359,8 @@ export function OwnerToolV4(){
 
   function content(){
     if(active==="overview")return <Overview/>;
+    if(active==="orders")return <OrdersManager/>;
+    if(active==="users")return <CustomersManager/>;
     if(active==="announcements")return <Announcements/>;
     if(active==="experience")return <ExperienceManager/>;
     if(active==="catalog")return <Catalog/>;

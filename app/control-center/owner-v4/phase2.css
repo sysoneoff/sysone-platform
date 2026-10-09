@@ -1,0 +1,47 @@
+/* V4.4 Phase 2 — Owner Command Center */
+.ownerV4 .ovStats{grid-template-columns:repeat(auto-fit,minmax(142px,1fr));gap:10px}
+.ownerV4 .ovStats article{min-height:92px;background:linear-gradient(135deg,#121b26,#0c1016);border-color:rgba(130,166,222,.13);border-radius:14px}
+.ownerV4 .ovStats strong{font-size:22px;color:#ebf3ff}
+.ownerV4 .ovStats small{font-size:10px;color:#94a6bf;text-transform:none;letter-spacing:.01em}
+.ownerV4 .ovStats article>svg{color:#79b5ff}
+.ovP2Analytics{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px}
+.ovP2Analytics .ovPanel{min-width:0;background:linear-gradient(155deg,#10161f,#0a0e14);padding:19px;border-radius:15px}
+.ovP2Analytics .ovPanelHead strong{font-size:14px}.ovP2Analytics .ovPanelHead small{font-size:10px}
+.ovP2Filters{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.ovP2Filters select,.ovP2Search{background:#101720;color:#e8effb;border:1px solid rgba(135,173,224,.17);border-radius:11px;min-height:41px;padding:0 12px;font-size:12px}
+.ovP2Search{display:flex;align-items:center;gap:9px;min-width:230px;flex:1}
+.ovP2Search input{flex:1;min-width:0;border:none;background:none;color:inherit;outline:none;font:inherit}
+.ovP2Search button,.ovP2TableTools button,.ovP2Pager button,.ovP2Table td button{border:1px solid rgba(134,174,236,.2);background:#162333;color:#cbdcf4;border-radius:8px;padding:8px 11px;font-size:11px;cursor:pointer}
+.ovP2Search button:hover,.ovP2TableTools button:hover,.ovP2Table td button:hover{background:#234363}
+.ovP2TableTools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0 11px;color:#9baec4;font-size:11px}
+.ovP2TableTools button{display:flex;align-items:center;gap:7px}
+.ownerV4 .ovP2Table th{font-size:10px;color:#9bacc0;padding:15px 13px}
+.ownerV4 .ovP2Table td{font-size:11px;color:#abbdd1;padding:13px;max-width:280px}
+.ownerV4 .ovP2Table td strong{font-size:12px;color:#eaf3ff}
+.ownerV4 .ovP2Table td small{font-size:10px;color:#71849d}
+.ovP2Status{display:inline-flex;align-items:center;border-radius:100px;padding:5px 9px;background:#212c3b;color:#a7b9d4;border:1px solid #34445c;font-size:10px;font-weight:700;letter-spacing:.04em}
+.ovP2Status.paid,.ovP2Status.active{background:#0f362e;border-color:#1e6554;color:#79dbb6}
+.ovP2Status.pending{background:#3a2d1e;border-color:#6c5330;color:#f0c47d}
+.ovP2Status.cancelled,.ovP2Status.failed{background:#391f28;border-color:#683943;color:#f0a6b5}
+.ovP2Pager{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-top:10px;font-size:11px;color:#889bb3}
+.ovP2Pager>div{display:flex;align-items:center;gap:9px}
+.ovP2Pager button{width:34px;height:34px;display:grid;place-items:center;padding:0}
+.ovP2Pager button:disabled,.ovP2TableTools button:disabled{opacity:.4;cursor:not-allowed}
+.ownerV4 .ovP2Empty{text-align:center;padding:36px 10px;color:#8ea4bd;font-size:12px}
+.ovP2Chart{display:flex;align-items:end;justify-content:space-around;gap:5px;height:160px;margin-top:20px;min-width:0}
+.ovP2BarGroup{display:flex;flex:1;align-items:center;justify-content:flex-end;flex-direction:column;height:100%;min-width:0;gap:5px;color:#9eb4ce;font-size:10px}
+.ovP2BarGroup>div{width:min(85%,32px);border-radius:5px 5px 2px 2px;background:linear-gradient(#71b6fc,#294e9b);min-height:2px}
+.ovP2BarGroup small{font-size:9px;color:#637e9a;white-space:nowrap}
+.ovP2Revenue{display:grid;gap:10px;margin:20px 0 14px}
+.ovP2RevenueLine{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.ovP2RevenueLine>span{display:grid;gap:4px}.ovP2RevenueLine strong{font-size:19px;color:#eaf3ff}.ovP2RevenueLine small{font-size:10px;color:#8295ad}
+.ovP2StatusGrid{display:flex;gap:8px;flex-wrap:wrap}.ovP2StatusGrid>div{display:flex;align-items:center;gap:8px;font-size:12px;color:#dae9ff}
+.ovP2Note{font-size:11px;color:#8195ad;line-height:1.7;margin:12px 0}
+.ovP2Item{display:flex;gap:14px;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(153,185,220,.09);padding:12px 2px}
+.ovP2Item>span{display:grid;gap:4px;min-width:0}.ovP2Item strong{font-size:12px;color:#dde8f5}.ovP2Item small{font-size:10px;color:#8094ad}.ovP2Item>small{text-align:right;flex-shrink:0}.ovP2Item .ovP2End{text-align:right}
+.ovP2Detail{padding:15px 0;overflow:auto}.ovP2Detail h4{margin:21px 0 6px;color:#dce9f8;font-size:14px}
+.ovP2Summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.ovP2Summary strong{font-size:21px;color:#eff6ff}.ovP2Summary small{font-size:11px;color:#8196af}
+.ovP2Kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.ovP2Kpis>div{border:1px solid rgba(140,178,220,.13);border-radius:10px;padding:12px;display:grid;gap:5px}.ovP2Kpis small{font-size:10px;color:#92a5bd}.ovP2Kpis strong{font-size:20px;color:#e9f4ff}
+.ovP2Warn{color:#edb189}.ovP2Drawer{width:min(700px,100%)}
+@media(max-width:950px){.ovP2Analytics{grid-template-columns:1fr}.ovP2Filters{align-items:stretch}.ovP2Filters select{flex:1}}
+@media(max-width:550px){.ownerV4 .ovStats{grid-template-columns:repeat(2,minmax(0,1fr))}.ovP2Search{flex-basis:100%}.ovP2Kpis{grid-template-columns:1fr 1fr}.ovP2Table{min-width:750px}.ovP2Chart{overflow-x:auto}}
