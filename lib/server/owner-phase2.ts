@@ -1,6 +1,6 @@
 import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
 import { getOwnerOverview } from "@/lib/server/admin-v4";
-import { assertOwnerRecordId, type OwnerQuery } from "@/lib/owner-phase2-query";
+import { assertOwnerRecordId, fillDailyOrders, OWNER_CANCEL_PENDING_SQL, type OwnerQuery } from "@/lib/owner-phase2-query";
 
 function db() { return requireBinding(getSysOneEnv().SYSONE_DB, "SYSONE_DB"); }
 
@@ -50,8 +50,7 @@ export async function getOwnerOrder(id: string) {
 export async function cancelPendingOrder(id: string) {
   assertOwnerRecordId(id);
   // Deliberately refuses to transition a paid or payment-referenced order.
-  const result = await db().prepare(`UPDATE orders SET status='CANCELLED'
-    WHERE id=? AND status='PENDING' AND paid_at IS NULL AND payment_reference IS NULL`).bind(id).run();
+  const result = await db().prepare(OWNER_CANCEL_PENDING_SQL).bind(id).run();
   if (Number(result.meta.changes ?? 0) > 0) return true;
   const row = await db().prepare("SELECT status FROM orders WHERE id=? LIMIT 1").bind(id).first<{status:string}>();
   if (!row) throw new Error("order_not_found");
@@ -98,9 +97,9 @@ export async function getOwnerAnalytics() {
     db().prepare("SELECT status,COUNT(*) AS total FROM orders GROUP BY status ORDER BY total DESC").all<{status:string;total:number}>(),
     db().prepare("SELECT currency,SUM(total_minor) AS totalMinor,COUNT(*) AS orders FROM orders WHERE status='PAID' GROUP BY currency ORDER BY currency").all<{currency:string;totalMinor:number;orders:number}>(),
     db().prepare(`SELECT substr(created_at,1,10) AS day,COUNT(*) AS total FROM orders
-      WHERE created_at >= datetime('now','-13 days') GROUP BY substr(created_at,1,10) ORDER BY day ASC`).all<{day:string;total:number}>(),
+      WHERE date(created_at) >= date('now','-13 days') GROUP BY substr(created_at,1,10) ORDER BY day ASC`).all<{day:string;total:number}>(),
     db().prepare(`SELECT o.id,o.status,o.total_minor AS totalMinor,o.currency,o.created_at AS createdAt,
       u.name AS customerName FROM orders o JOIN users u ON u.id=o.user_id ORDER BY o.created_at DESC LIMIT 8`).all<Record<string, unknown>>(),
   ]);
-  return { ...overview, orderStatuses:statuses.results??[], paidRevenueByCurrency:revenue.results??[], dailyOrders:daily.results??[], recentOrders:recent.results??[] };
+  return { ...overview, orderStatuses:statuses.results??[], paidRevenueByCurrency:revenue.results??[], dailyOrders:fillDailyOrders(daily.results??[]), recentOrders:recent.results??[] };
 }

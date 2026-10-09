@@ -36,3 +36,24 @@ export function safeCsvCell(value: unknown): string {
 export function toCsv(headers: string[], rows: unknown[][]): string {
   return "\uFEFF" + [headers.map(safeCsvCell).join(","), ...rows.map(row => row.map(safeCsvCell).join(","))].join("\r\n");
 }
+
+
+/** Calendar-aligned trend values. Missing days are filled with zeros (UTC/D1 dates). */
+export function fillDailyOrders(
+  rows: ReadonlyArray<{ day: string; total: number }>,
+  today = new Date(),
+): { day: string; total: number }[] {
+  if (Number.isNaN(today.getTime())) throw new Error("invalid_today");
+  const values = new Map(rows.filter(row => /^\d{4}-\d{2}-\d{2}$/.test(row.day))
+    .map(row => [row.day, Number(row.total) || 0]));
+  const utcStart = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return Array.from({ length: 14 }, (_, index) => {
+    const day = new Date(utcStart - (13 - index) * 86_400_000).toISOString().slice(0, 10);
+    return { day, total: values.get(day) ?? 0 };
+  });
+}
+
+/** Restrict cancellation to genuinely unpaid, unfulfilled orders, atomically. */
+export const OWNER_CANCEL_PENDING_SQL = `UPDATE orders SET status='CANCELLED'
+  WHERE id=? AND status='PENDING' AND paid_at IS NULL AND payment_reference IS NULL
+  AND NOT EXISTS (SELECT 1 FROM entitlements e WHERE e.order_id=orders.id)`;

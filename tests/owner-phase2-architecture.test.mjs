@@ -18,6 +18,8 @@ test('pending cancellation cannot mark orders paid or grant entitlements',()=>{
   const store=read('lib/server/owner-phase2.ts');
   assert.match(route,/isSafeAdminMutation\(request\)/);
   assert.match(route,/CANCEL_PENDING/);
-  assert.match(store,/WHERE id=\? AND status='PENDING' AND paid_at IS NULL AND payment_reference IS NULL/);
+  assert.match(store,/OWNER_CANCEL_PENDING_SQL/);
+  const query=read('lib/owner-phase2-query.ts');
+  assert.match(query,/NOT EXISTS \(SELECT 1 FROM entitlements/);
   assert.doesNotMatch(store,/INSERT INTO entitlements|SET status='PAID'/);
 });
