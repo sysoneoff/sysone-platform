@@ -1,4 +1,4 @@
-﻿import { isAdminAuthenticated, isSafeAdminMutation } from "@/lib/server/admin-auth";
+import { isAdminAuthenticated, isSafeAdminMutation } from "@/lib/server/admin-auth";
 import { deleteEntity, listEntity, updateEntity } from "@/lib/server/admin-v4";
 import { writeAdminAudit } from "@/lib/server/admin-products";
 
@@ -13,6 +13,23 @@ function unauthorized() {
     { ok: false, error: "unauthorized" },
     { status: 401, headers: { "Cache-Control": "no-store" } },
   );
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && !Array.isArray(value) && typeof value === "object";
+}
+
+async function parseMutation(request: Request) {
+  const raw = await request.text();
+  if (!raw || new TextEncoder().encode(raw).byteLength > 16000) throw new Error("invalid_body");
+  let data: unknown;
+  try { data = JSON.parse(raw); } catch { throw new Error("invalid_json"); }
+  if (!isPlainObject(data)) throw new Error("invalid_body");
+  return data;
+}
+
+function validId(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0 && value.trim().length <= 128;
 }
 
 function errorResponse(error: unknown) {
@@ -63,20 +80,14 @@ export async function PATCH(request: Request, context: RouteContext) {
 
   try {
     const { entity } = await context.params;
-    const body = await request.json();
-
-    const id = typeof body?.id === "string" ? body.id.trim() : "";
-    const changes =
-      body?.changes && typeof body.changes === "object"
-        ? body.changes
-        : {};
-
-    if (!id) {
-      return Response.json(
-        { ok: false, error: "id_required" },
-        { status: 400 },
-      );
+    const body = await parseMutation(request);
+    const id = validId(body.id) ? body.id.trim() : "";
+    const changes = body.changes;
+    if (!isPlainObject(changes) || Object.keys(changes).length > 30) {
+      throw new Error("invalid_changes");
     }
+
+    if (!id) throw new Error("invalid_id");
 
     await updateEntity(entity, id, changes);
 
@@ -104,12 +115,7 @@ export async function DELETE(request: Request, context: RouteContext) {
     const { entity } = await context.params;
     const id = new URL(request.url).searchParams.get("id")?.trim() ?? "";
 
-    if (!id) {
-      return Response.json(
-        { ok: false, error: "id_required" },
-        { status: 400 },
-      );
-    }
+    if (!validId(id)) throw new Error("invalid_id");
 
     const deleted = await deleteEntity(entity, id);
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { isAdminAuthenticated } from "@/lib/server/admin-auth";
 import { ControlCenterLogin } from "./ControlCenterLogin";
 import { OwnerToolV4 } from "./OwnerToolV4";
@@ -7,6 +8,7 @@ import "./obsidian-admin.css";
 import "./owner-v4.css";
 
 export const dynamic="force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function ControlCenterPage(){
   const authenticated=await isAdminAuthenticated();

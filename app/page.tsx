@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo/canonical";
 import Link from "next/link";
 import { ArrowRight, BriefcaseBusiness, Code2, Gamepad2, Globe2, MonitorDown, Sparkles } from "lucide-react";
 
@@ -8,6 +9,7 @@ import { listPublishedProducts, type PublicProduct } from "@/lib/server/products
 
 export const dynamic="force-dynamic";
 export const metadata:Metadata={
+  alternates: { canonical: canonicalUrl("/") },
   title:{absolute:"SysOne - Dasturlar, web ilovalar va o'yinlar"},
   description:"SysOne dasturlari, web ilovalari, o'yinlari va raqamli mahsulotlari - bitta platformada.",
 };

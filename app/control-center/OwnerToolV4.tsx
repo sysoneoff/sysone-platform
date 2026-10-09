@@ -12,8 +12,11 @@ import {
 import { ReleaseManager } from "./ReleaseManager";
 import { ProjectRequestsManager } from "./ProjectRequestsManager";
 import { SupportTicketsManager } from "./SupportTicketsManager";
+import { Workspace, json, bytes, formatDate } from "./owner-v4/shared";
+import { NAV } from "./owner-v4/navigation";
+import { Overview } from "./owner-v4/Overview";
+import { EntityManager } from "./owner-v4/EntityManager";
 
-type AnyRow=Record<string,any>;
 type Product={
   id:string;slug:string;name:string;kind:string;category:string|null;description:string|null;
   status:string;pricingModel:string;priceMinor:number;currency:string;featured:boolean;published:boolean;
@@ -25,79 +28,9 @@ type RuntimeProduct={
 };
 type Announcement={id:string;label:string|null;title:string;href:string|null;style:string;priority:number;enabled:boolean;startsAt:string|null;endsAt:string|null};
 
-async function json(response:Response){
-  const data=await response.json().catch(()=>({}));
-  if(!response.ok) throw new Error(data.error||`request_${response.status}`);
-  return data;
-}
-function bytes(n:number){if(n<1024)return `${n} B`;if(n<1048576)return `${(n/1024).toFixed(1)} KB`;return `${(n/1048576).toFixed(1)} MB`}
-function formatDate(v:any){if(!v)return "вЂ”";const d=new Date(String(v));return Number.isNaN(+d)?String(v):d.toLocaleString("uz-UZ")}
 
-const NAV=[
-  ["Asosiy",[
-    ["Overview","overview",LayoutDashboard],
-    ["E'lonlar","announcements",Megaphone],
-    ["Bosh sahifa & Dock","experience",LayoutDashboard],
-  ]],
-  ["Mahsulotlar",[
-    ["Katalog","catalog",Boxes],
-    ["Web Apps & Games","runtime",Gamepad2],
-    ["Releases","releases",Package],
-    ["Media","media",ImageIcon],
-  ]],
-  ["Commerce",[
-    ["Buyurtmalar","orders",ShoppingCart],
-    ["Entitlements","entitlements",BadgeCheck],
-    ["Litsenziyalar","licenses",ShieldCheck],
-    ["License devices","devices",MonitorDown],
-    ["Reviews","reviews",Gauge],
-  ]],
-  ["Foydalanuvchi",[
-    ["Users","users",Users],
-    ["Sessions","sessions",UserRound],
-    ["Notifications","notifications",BellRing],
-    ["Organizations","organizations",Database],
-    ["Projects","projects",Workflow],
-    ["Support","support",LifeBuoy],
-  ]],
-  ["Platforma",[
-    ["Content","content",Database],
-    ["Feature Flags","flags",Flag],
-    ["AI Usage","ai",Activity],
-    ["Audit","audit",Activity],
-    ["Settings","settings",Settings],
-  ]],
-] as const;
 
-function Workspace({eyebrow,title,description,actions,children}:{eyebrow:string;title:string;description?:string;actions?:ReactNode;children:ReactNode}){
-  return <section className="ovWorkspace">
-    <header className="ovWorkspaceHead"><div><span>{eyebrow}</span><h2>{title}</h2>{description?<p>{description}</p>:null}</div>{actions?<div>{actions}</div>:null}</header>
-    {children}
-  </section>;
-}
 
-function Overview(){
-  const [data,setData]=useState<any>(null),[error,setError]=useState("");
-  async function load(){setError("");try{setData(await json(await fetch("/api/admin/v4/overview",{cache:"no-store"})))}catch(e){setError(e instanceof Error?e.message:"load_failed")}}
-  useEffect(()=>{void load()},[]);
-  const cards=data?.counts?[
-    ["Products",data.counts.products,Boxes],["Live",data.counts.liveProducts,BadgeCheck],["Users",data.counts.users,Users],
-    ["Orders",data.counts.orders,ShoppingCart],["Licenses",data.counts.licenses,ShieldCheck],["Web builds",data.counts.webBuilds,Gamepad2],
-    ["Projects",data.counts.projects,Workflow],["Open tickets",data.counts.openTickets,LifeBuoy],["Announcements",data.counts.announcements,Megaphone],
-  ]:[];
-
-  return <Workspace eyebrow="OWNER OVERVIEW" title="SysOne holati" description="D1, R2, commerce va runtime bo'yicha qisqa ko'rinish."
-    actions={<button className="ovIconBtn" onClick={()=>void load()}><RefreshCw size={15}/></button>}>
-    {error?<div className="ovError">{error}</div>:null}
-    {!data?<div className="ovLoading"><LoaderCircle className="spin"/> Ma'lumotlar yuklanmoqda...</div>:<>
-      <div className="ovStats">{cards.map(([name,value,Icon]:any)=><article key={name}><Icon size={17}/><span><small>{name}</small><strong>{value}</strong></span></article>)}</div>
-      <div className="ovPanel">
-        <div className="ovPanelHead"><strong>So'nggi audit</strong><small>Owner actions</small></div>
-        <div className="ovAuditList">{(data.audit??[]).map((row:any)=><div key={row.id}><span><strong>{row.action}</strong><small>{row.entity_type} / {row.entity_id??"вЂ”"}</small></span><time>{formatDate(row.created_at)}</time></div>)}</div>
-      </div>
-    </>}
-  </Workspace>;
-}
 
 function Announcements(){
   const [items,setItems]=useState<Announcement[]>([]),[editing,setEditing]=useState<any>(null),[error,setError]=useState("");
@@ -307,27 +240,6 @@ function Media(){
     <form className="ovMediaUpload" onSubmit={upload}><input type="file" accept="image/*,video/mp4,video/webm" onChange={e=>setFile(e.target.files?.[0]??null)}/><button className="button buttonPrimary" disabled={!file||busy}><Upload size={15}/> Yuklash</button></form>
     {error?<div className="ovError">{error}</div>:null}
     <div className="ovMediaGrid">{items.map(a=><article key={a.key}>{a.contentType?.startsWith("image/")?<img src={a.url} alt=""/>:<div className="ovMediaPlaceholder"><FileArchive/></div>}<div><strong>{a.key.split("/").pop()}</strong><small>{bytes(a.size)} / {formatDate(a.uploaded)}</small></div><button className="danger" onClick={()=>void remove(a.key)}><Trash2 size={14}/></button></article>)}</div>
-  </Workspace>;
-}
-
-function EntityManager({entity,title,description}:{entity:string;title:string;description:string}){
-  const [rows,setRows]=useState<AnyRow[]>([]),[editable,setEditable]=useState<string[]>([]),[pk,setPk]=useState("id"),[deletable,setDeletable]=useState(false),[selected,setSelected]=useState<AnyRow|null>(null),[error,setError]=useState("");
-  async function load(){try{const d=await json(await fetch(`/api/admin/v4/entities/${entity}`,{cache:"no-store"}));setRows(d.rows??[]);setEditable(d.editable??[]);setPk(d.pk??"id");setDeletable(Boolean(d.deletable))}catch(e){setError(e instanceof Error?e.message:"load_failed")}}
-  useEffect(()=>{void load()},[entity]);
-  const cols=useMemo(()=>{const set=new Set<string>();rows.slice(0,15).forEach(r=>Object.keys(r).forEach(k=>set.add(k)));return [...set].slice(0,7)},[rows]);
-  async function save(e:FormEvent){e.preventDefault();if(!selected)return;const changes:Record<string,any>={};editable.forEach(k=>changes[k]=selected[k]);try{await json(await fetch(`/api/admin/v4/entities/${entity}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:String(selected[pk]),changes})}));setSelected(null);await load()}catch(err){setError(err instanceof Error?err.message:"update_failed")}}
-  async function remove(row:AnyRow){const id=String(row[pk]??"");if(!id||!confirm("Bu yozuv o'chirilsinmi?"))return;try{await json(await fetch(`/api/admin/v4/entities/${entity}?id=${encodeURIComponent(id)}`,{method:"DELETE"}));await load()}catch(err){setError(err instanceof Error?err.message:"delete_failed")}}
-  return <Workspace eyebrow="DATABASE" title={title} description={description} actions={<button className="ovIconBtn" onClick={()=>void load()}><RefreshCw size={15}/></button>}>
-    {error?<div className="ovError">{error}</div>:null}
-    <div className="ovTableWrap"><table className="ovTable"><thead><tr>{cols.map(c=><th key={c}>{c}</th>)}{(editable.length||deletable)?<th/>:null}</tr></thead><tbody>
-      {rows.map((r,i)=><tr key={String(r[pk]??i)}>{cols.map(c=><td key={c}>{typeof r[c]==="object"?JSON.stringify(r[c]):String(r[c]??"вЂ”")}</td>)}{(editable.length||deletable)?<td><div className="ovRowActions">{editable.length?<button className="ovIconBtn" onClick={()=>setSelected({...r})}><Pencil size={13}/></button>:null}{deletable?<button className="danger" onClick={()=>void remove(r)}><Trash2 size={13}/></button>:null}</div></td>:null}</tr>)}
-    </tbody></table></div>
-    {selected?<div className="ovModal"><form className="ovDrawer" onSubmit={save}><header><div><span>DATABASE EDITOR</span><h3>{title}</h3></div><button type="button" onClick={()=>setSelected(null)}><X/></button></header>
-      <div className="ovForm">{editable.map(k=><label className="wide" key={k}><span>{k}</span>{["enabled","published"].includes(k)
-        ?<select value={selected[k]?1:0} onChange={e=>setSelected({...selected,[k]:e.target.value==="1"})}><option value={1}>true</option><option value={0}>false</option></select>
-        :<input value={selected[k]??""} onChange={e=>setSelected({...selected,[k]:e.target.value})}/>}</label>)}</div>
-      <footer><button type="button" className="button buttonGhost" onClick={()=>setSelected(null)}>Bekor</button><button className="button buttonPrimary"><Save size={15}/> Saqlash</button></footer>
-    </form></div>:null}
   </Workspace>;
 }
 

@@ -1,4 +1,5 @@
 import { getSysOneEnv, requireBinding } from "@/lib/server/cloudflare";
+import { validateEntityChanges } from "@/lib/server/admin-entity-validation";
 
 type D1Like = NonNullable<ReturnType<typeof getSysOneEnv>["SYSONE_DB"]>;
 
@@ -304,7 +305,7 @@ const ENTITIES: Record<string, EntityConfig> = {
   users: {
     table: "users", pk: "id",
     select: ["id","email","name","role","locale","created_at","updated_at"],
-    editable: { name:"text", role:"text", locale:"text" }, order: "created_at DESC",
+    editable: { name:"text", locale:"text" }, order: "created_at DESC",
   },
   sessions: {
     table: "sessions", pk: "id",
@@ -314,7 +315,7 @@ const ENTITIES: Record<string, EntityConfig> = {
   organizations: {
     table: "organizations", pk: "id",
     select: ["id","name","slug","owner_user_id","created_at"],
-    editable: { name:"text", slug:"text", owner_user_id:"text" }, order: "created_at DESC",
+    editable: { name:"text", slug:"text" }, order: "created_at DESC",
   },
   notifications: {
     table: "notifications", pk: "id",
@@ -324,17 +325,17 @@ const ENTITIES: Record<string, EntityConfig> = {
   orders: {
     table: "orders", pk: "id",
     select: ["id","user_id","status","subtotal_minor","discount_minor","total_minor","currency","payment_provider","payment_reference","created_at","paid_at"],
-    editable: { status:"text", payment_provider:"nullableText", payment_reference:"nullableText", paid_at:"nullableText" }, order: "created_at DESC",
+    editable: { payment_provider:"nullableText" }, order: "created_at DESC",
   },
   entitlements: {
     table: "entitlements", pk: "id",
     select: ["id","user_id","product_id","order_id","status","starts_at","ends_at"],
-    editable: { status:"text", ends_at:"nullableText" }, order: "starts_at DESC",
+    editable: { ends_at:"nullableText" }, order: "starts_at DESC",
   },
   licenses: {
     table: "licenses", pk: "id",
     select: ["id","entitlement_id","device_limit","status","expires_at","created_at"],
-    editable: { status:"text", device_limit:"number", expires_at:"nullableText" }, order: "created_at DESC",
+    editable: { device_limit:"number", expires_at:"nullableText" }, order: "created_at DESC",
   },
   devices: {
     table: "license_devices", pk: "id",
@@ -395,20 +396,12 @@ export async function listEntity(name: string, limit = 200) {
 export async function updateEntity(name: string, id: string, changes: Record<string, unknown>) {
   const config = entityConfig(name);
   if (!config) throw new Error("invalid_entity");
+  const normalized = validateEntityChanges(name, config.editable, changes);
   const assignments: string[] = [];
   const values: unknown[] = [];
-
-  for (const [key, raw] of Object.entries(changes)) {
-    const type = config.editable[key];
-    if (!type) continue;
+  for (const [key, value] of Object.entries(normalized)) {
     assignments.push(`${key}=?`);
-    if (type === "boolean") values.push(Boolean(raw) ? 1 : 0);
-    else if (type === "number") {
-      const n = Number(raw);
-      if (!Number.isFinite(n)) throw new Error(`invalid_${key}`);
-      values.push(n);
-    } else if (type === "nullableText") values.push(nullable(raw, 4000));
-    else values.push(clean(raw, 4000));
+    values.push(value);
   }
 
   if (!assignments.length) throw new Error("no_editable_changes");

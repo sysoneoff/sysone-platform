@@ -1,4 +1,5 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo/canonical";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -114,11 +115,13 @@ export async function generateMetadata({
   if (!product || product.kind === "GAME") {
     return {
       title: "Product not found",
+      robots: { index: false, follow: false },
     };
   }
 
   return {
     title: product.name,
+    alternates: { canonical: canonicalUrl(`/products/${encodeURIComponent(product.slug)}`) },
     description:
       product.shortDescription ??
       product.tagline ??

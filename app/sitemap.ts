@@ -1,21 +1,9 @@
 import type { MetadataRoute } from "next";
 
 import { listPublishedProducts } from "@/lib/server/products";
+import { canonicalUrl } from "@/lib/seo/canonical";
 
 export const dynamic = "force-dynamic";
-
-const FALLBACK_SITE_URL =
-  "https://sysone.top";
-
-function getBaseUrl() {
-  const configured =
-    process.env.NEXT_PUBLIC_SITE_URL?.trim();
-
-  return (configured || FALLBACK_SITE_URL).replace(
-    /\/+$/,
-    "",
-  );
-}
 
 function getValidDate(value: string) {
   const date = new Date(value);
@@ -26,7 +14,7 @@ function getValidDate(value: string) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = getBaseUrl();
+  const base = canonicalUrl("/").replace(/\/$/, "");
 
   const products =
     await listPublishedProducts();

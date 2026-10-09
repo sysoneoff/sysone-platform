@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo/canonical";
 import type { LucideIcon } from "lucide-react";
 import { Box, BrainCircuit, Gamepad2, PackageOpen, ShoppingBag } from "lucide-react";
 
@@ -8,7 +9,8 @@ import type { TranslationKey } from "@/lib/i18n";
 import { listPublishedProducts, type PublicProduct } from "@/lib/server/products";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Store", description: "Browse published SysOne software, games, AI tools and digital products." };
+export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/marketplace") }, title: "Store", description: "Browse published SysOne software, games, AI tools and digital products." };
 
 type StoreSection = { kind: string; titleKey: TranslationKey; descriptionKey: TranslationKey; icon: LucideIcon };
 const STORE_SECTIONS: StoreSection[] = [

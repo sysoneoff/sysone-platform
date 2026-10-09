@@ -1,4 +1,5 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo/canonical";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -105,11 +106,13 @@ export async function generateMetadata({
   if (!game || game.kind !== "GAME") {
     return {
       title: "Game not found",
+      robots: { index: false, follow: false },
     };
   }
 
   return {
     title: game.name,
+    alternates: { canonical: canonicalUrl(`/games/${encodeURIComponent(game.slug)}`) },
     description:
       game.shortDescription ??
       game.tagline ??

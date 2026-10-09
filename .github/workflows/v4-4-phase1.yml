@@ -1,0 +1,28 @@
+name: V4.4 Phase 1 checks
+on:
+  push:
+    branches: [v4.4-development]
+  pull_request:
+    branches: [v4-professional-platform]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Repository verification
+        run: npm run verify
+      - name: Unit and architecture tests
+        run: npm run test
+      - name: Next.js build (no deploy)
+        run: npm run build
