@@ -143,3 +143,18 @@ button.danger,.danger{color:#a36d74!important}button:disabled{opacity:.4;cursor:
   .ovDockOrder{padding-bottom:0}
   .ovDockConfigRow .ovCheck{padding-top:0}
 }
+
+/* SysOne V4.4 — scoped entity manager empty state and readability */
+.ownerV4 .ovEntitySummary{font-size:12px;color:#9fb1c7;line-height:1.5}
+.ownerV4 .ovEntityEmpty{min-height:230px;padding:34px 24px;border:1px dashed rgba(125,160,205,.23);border-radius:15px;background:linear-gradient(145deg,rgba(23,34,50,.34),rgba(10,14,20,.7));display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;color:#8096af}
+.ownerV4 .ovEntityEmpty>svg{color:#79a5dd}
+.ownerV4 .ovEntityEmpty h3{font-size:16px;font-weight:700;margin:0;color:#e4edfa;letter-spacing:-.02em}
+.ownerV4 .ovEntityEmpty p{font-size:12px;line-height:1.6;color:#8fa2bb;max-width:410px;margin:0}
+.ownerV4 .ovEntityLoading{min-height:130px;font-size:12px}
+.ownerV4 .ovEntityRetry{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid rgba(124,167,225,.26);background:#152438;color:#c9dfff;padding:10px 14px;border-radius:9px;font-size:12px;cursor:pointer}
+.ownerV4 .ovEntityRetry:hover{background:#1f3350}
+.ownerV4 .ovEntityTable{min-width:680px}
+.ownerV4 .ovEntityTable th{font-size:11px;color:#a4b7d0;padding:13px 12px}
+.ownerV4 .ovEntityTable td{font-size:12px;line-height:1.5;color:#bfccdb;padding:13px 12px;max-width:290px}
+.ownerV4 .ovEntityTable .ovRowActions button{width:32px;height:32px;color:#b3c6df}
+@media(max-width:760px){.ownerV4 .ovEntityEmpty{min-height:210px;padding:27px 15px}.ownerV4 .ovEntityTable{min-width:650px}}
